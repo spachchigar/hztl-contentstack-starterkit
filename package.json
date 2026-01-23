@@ -12,21 +12,16 @@
   "homepage": "https://contentstack.com",
   "license": "MIT",
   "scripts": {
-    "bootstrap:run": "ts-node --require dotenv-flow/config --project tsconfig.scripts.json scripts/bootstrap.ts",
     "tsgen": "csdx tsgen -a CSDT -o \"./.generated/index.ts\" -p \"I\" --branch=main --no-doc --include-system-fields --include-editable-tags",
     "gen-config": "tsx ./scripts/generate-component-mapper.ts",
     "gen-config:watch": "tsx ./scripts/generate-component-mapper.ts --watch",
-    "populate-launch": "tsx ./scripts/populate-launch-json.ts",
-    "populate-launch:all": "tsx ./scripts/populate-launch-json.ts --all",
     "next:build": "next build",
     "next:dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "next:start": "next start",
-    "dev": "cross-env NODE_ENV=development npm-run-all --serial tsgen bootstrap:run --parallel gen-config:watch next:dev",
-    "build": "cross-env NODE_ENV=production npm-run-all --serial tsgen gen-config bootstrap:run next:build",
-    "start": "cross-env-shell NODE_ENV=production npm-run-all --serial tsgen bootstrap:run gen-config next:build next:start",
-    "lint": "next lint",
-    "figma-tokens": "ts-node --require dotenv-flow/config --project tsconfig.scripts.json scripts/figma-tokens/sync-figma-to-tokens.ts",
-    "theme-config": "ts-node --require dotenv-flow/config --project tsconfig.scripts.json scripts/figma-tokens/generate-css-variables.ts"
+    "dev": "cross-env NODE_ENV=development npm-run-all --serial tsgen --parallel gen-config:watch next:dev",
+    "build": "cross-env NODE_ENV=production npm-run-all --serial tsgen gen-config next:build",
+    "start": "cross-env-shell NODE_ENV=production npm-run-all --serial tsgen gen-config next:build next:start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@contentstack/delivery-sdk": "^4.10.3",
