@@ -3,7 +3,7 @@ import React, { JSX } from 'react';
 
 //Local
 import { useContentWithFallbacks } from '@/lib/hooks/useContentWithFallbacks';
-import { ReplacementToken, tokenReplace } from '@/lib/utils/string-utils';
+import { ReplacementToken, tokenReplace } from '@/utils/string-utils';
 
 interface PlainTextWrapperProps extends React.HTMLAttributes<HTMLHeadingElement> {
   fallbacks?: (string | undefined)[];

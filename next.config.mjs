@@ -24,10 +24,6 @@ const nextConfig = {
         protocol: 'https',
         hostname: '*-images.contentstack.com',
       },
-      {
-        protocol: 'https',
-        hostname: 'fiveirongolf.com',
-      },
     ],
     qualities: [25, 50, 75, 100],
     // Enable image optimization

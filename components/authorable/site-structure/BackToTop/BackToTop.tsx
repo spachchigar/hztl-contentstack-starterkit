@@ -6,7 +6,6 @@ import { tv } from 'tailwind-variants';
 // Local
 import { SvgIcon } from '@/helpers/SvgIcon';
 import { useIsScrolled } from '@/lib/hooks/useIsScrolled';
-import { getTestProps } from '@/lib/testing/utils';
 import { useGlobalLabels } from '@/providers/GlobalLabelsProvider';
 
 const tailwindVariants = tv({
@@ -103,7 +102,6 @@ const BackToTop = () => {
     <div
       className={base()}
       data-component="authorable/shared/site-structure/backtotop"
-      {...getTestProps(`component-back-to-top`)}
     >
       <button
         className={button()}
@@ -112,7 +110,6 @@ const BackToTop = () => {
         aria-hidden={!isScrolled}
         disabled={!isScrolled}
         type="button"
-        {...getTestProps(`back-to-top-button`)}
       >
         <span className="sr-only">{globalLabels.back_to_top_label || fallbackText}</span>
 

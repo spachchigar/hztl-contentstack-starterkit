@@ -3,7 +3,7 @@
   "extends": [
     "next",
     "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
   "plugins": [
     "@typescript-eslint",
@@ -12,8 +12,7 @@
   "ignorePatterns": [
     ".generated/**/*", 
     "**/*.d.ts", 
-    "**/*.js",
-    "lib/themes/**/*"
+    "**/*.js"
   ],
   "rules": {
     "@next/next/no-img-element": "off",
@@ -26,22 +25,10 @@
         "caughtErrorsIgnorePattern": "^_",
         "varsIgnorePattern": "^_|^pageType$",
         "ignoreRestSiblings": true 
-      },
+      }
     ],
     "@typescript-eslint/no-explicit-any": "off",
     "react-hooks/rules-of-hooks": "warn",
     "jsx-quotes": ["error", "prefer-double"]
-  },
-  "overrides": [
-    {
-      "files": ["lib/themes/**/*.ts"]
-    },
-    {
-      "files": ["lib/contentstack-old.ts", "lib/page-data-old.ts"],
-      "rules": {
-        "@typescript-eslint/no-explicit-any": "off", // Disable for old files
-        "@typescript-eslint/no-unused-vars": "off" // Disable for old files
-      }
-    }
-  ]
+  }
 }

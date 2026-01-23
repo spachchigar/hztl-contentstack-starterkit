@@ -1,5 +1,3 @@
-import { ComponentProps } from './component-props';
-
 // Description: Type definitions for the Contentstack API
 export interface IExtendedProps {
   extendedProps?: Record<string, any>;
@@ -25,5 +23,3 @@ export enum Devices {
   TOUCH = 'mobile',
   NON_TOUCH = 'desktop',
 }
-
-export type WithStandardComponentWrapperProps<P> = P & ComponentProps;

@@ -1,10 +1,5 @@
-// Load before anything else
-import '@/lib/preload';
-
 import React from 'react';
 import '@/assets/app.css';
-import '@/assets/themes/index.css';
-
 // RootLayout component that wraps the entire application
 export default async function RootLayout({
   children,

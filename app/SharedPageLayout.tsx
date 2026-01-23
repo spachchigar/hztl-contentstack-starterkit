@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import { IPage } from '@/.generated';
 import { Header } from '@/components/authorable/Header';
 import { Footer } from '@/components/authorable/Footer';
-import { tv } from 'tailwind-variants';
 import BackToTop from '@/components/authorable/site-structure/BackToTop/BackToTop';
 import { fetchPageData } from '@/lib/contentstack/page-data';
 import { MainLayout } from '@/components/authorable/site-structure/MainLayout/MainLayout';
@@ -52,23 +51,18 @@ export async function SharedPageLayout({
     notFound();
   }
 
-  const {
-    footer: footerClass,
-    footerContentContainer: footerContentContainerClass,
-    main: mainClass,
-  } = TAILWIND_VARIANTS();
   return (
     <>
       <div className="prod-mode">
-        <div className={mainClass()} tabIndex={-1}>
+        <div tabIndex={-1}>
           {header && <Header />}
           <main>
             <div id="content">
               <MainLayout page={page} pageContentTypeUID={pageContentTypeUID} />
             </div>
           </main>
-          <footer className={footerClass()}>
-            <div className={footerContentContainerClass()}>{footer && <Footer />}</div>
+          <footer>
+            <div>{footer && <Footer />}</div>
           </footer>
           <BackToTop />
         </div>
@@ -76,11 +70,3 @@ export async function SharedPageLayout({
     </>
   );
 }
-
-const TAILWIND_VARIANTS = tv({
-  slots: {
-    footer: ['bg-color-surface-surface'],
-    footerContentContainer: ['w-full'],
-    main: ['font-typography-body-font-family', 'overflow-x-clip'],
-  },
-});
