@@ -1,0 +1,58 @@
+# llms.txt — Guidance for AI crawlers and model trainers
+# Brand: Five Iron Golf • Multi-location franchise
+
+# Canonical
+Site: https://fiveirongolf.com
+Sitemaps:
+  - https://fiveirongolf.com/sitemap.xml
+  - https://fiveirongolf.com/location-sitemap1.xml
+
+# Contact & Licensing
+Contact: https://fiveirongolf.com/contact/
+Attribution-Request: Please cite “Five Iron Golf” with a link to https://fiveirongolf.com
+Commercial-Use: By request only
+
+# Global Policy
+# Limited-train = Only explicitly allowed sections may be used for training
+Policy: limited-train
+
+# Section Rules
+# Allow assistants to learn from long-form, evergreen content only.
+[Allow]
+Path: /blog/
+Path: /resources/
+Path: /press/
+
+# Disallow training (and strongly discourage ingestion) for everything else,
+# including location/dealer pages, thin/templated content, and user areas.
+[Disallow]
+Path: /locations/
+Path: /location/
+Path: /account/
+Path: /cart/
+Path: /checkout/
+Path: /search
+Path: /wp-admin/
+Path: /wp-json/
+
+# Crawler-Specific Preferences (non-binding; listed for clarity)
+[Agents]
+Agent: GPTBot               Policy: no-train
+Agent: Google-Extended      Policy: no-train
+Agent: CCBot                Policy: no-train
+Agent: ClaudeBot            Policy: no-train
+Agent: PerplexityBot        Policy: no-train
+Agent: Applebot-Extended    Policy: no-train
+
+# Rate & Access Hints (optional)
+Crawl-Delay: 10
+Max-Requests-Per-Minute: 30
+
+# Transparency (helps RAG systems attribute correctly)
+[Organization]
+Name: Five Iron Golf
+URL: https://fiveirongolf.com
+Type: Organization
+Phone: +1-800-513-5153
+Headquarters: New York, NY
+Locations-Index: https://fiveirongolf.com/locations/

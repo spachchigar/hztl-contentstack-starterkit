@@ -1,0 +1,6 @@
+User-agent: *
+
+Disallow:
+
+Sitemap: https://fiveirongolf.com/sitemap.xml
+

@@ -1,0 +1,8 @@
+{
+  "requestPayload": {
+    "base_branch": "five_iron_golf",
+    "compare_branch": "main",
+    "default_merge_strategy": "overwrite_with_compare",
+    "no_revert": true
+  }
+}
