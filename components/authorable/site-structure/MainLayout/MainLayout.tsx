@@ -14,7 +14,6 @@ interface MainLayoutProps {
 
 
 export const MainLayout = ({ page, pageContentTypeUID = "page" }: MainLayoutProps): JSX.Element => {
-    console.log(page);
     const { base } = TAILWIND_VARIANTS();
 
     const mainLayoutRef = useRef<HTMLDivElement>(null);

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
-import { getEntries } from '@/lib/contentstack-old';
+import { getEntries } from '@/lib/contentstack/entries';
 import { IRedirectMappings } from '@/.generated';
 
 interface RedirectRule {

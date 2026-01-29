@@ -3,7 +3,7 @@ import React, { useEffect, useState, JSX } from 'react';
 
 // Local
 import { useContentWithFallbacks } from '@/lib/hooks/useContentWithFallbacks';
-import { ReplacementToken, tokenReplace } from '@/lib/utils/string-utils';
+import { ReplacementToken, tokenReplace } from '@/utils/string-utils';
 
 interface RichTextWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
   fallbacks?: (string | undefined)[];
@@ -27,22 +27,6 @@ const RichTextWrapper = ({
   // We should only render if it has a value, or if we are editing
   if (!updatedContent) return <></>;
 
-  //Commented for now for contentstack
-  // In editing mode, move `className` to wrapping div,
-  // because Sitecore doesn't render the props if field is empty,
-  // and so the "rte" and other css classes are missing initially.
-  // if (isEditing) {
-  //   return (
-  //     <div className={`rte ${className ?? ''}`}>
-  //       <RichText
-  //         {...props}
-  //         data-component="helpers/fieldwrappers/richtextwrapper"
-  //         editable={editable}
-  //         field={updatedField}
-  //       />
-  //     </div>
-  //   );
-  // }
   return (
     <div
       {...props}
