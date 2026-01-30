@@ -4,10 +4,13 @@ import React, { useEffect, useState, JSX } from 'react';
 // Local
 import { useContentWithFallbacks } from '@/lib/hooks/useContentWithFallbacks';
 import { ReplacementToken, tokenReplace } from '@/utils/string-utils';
+import { CSLPFieldMapping } from '@/.generated';
+import { getCSLPAttributes } from '@/utils/type-guards';
 
 interface RichTextWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
   fallbacks?: (string | undefined)[];
   tokens?: ReplacementToken[];
+  cslpAttribute?: CSLPFieldMapping
 }
 
 const RichTextWrapper = ({
@@ -15,6 +18,7 @@ const RichTextWrapper = ({
   fallbacks,
   tokens,
   className,
+  cslpAttribute,
   ...props
 }: RichTextWrapperProps): JSX.Element => {
   const renderedContent = useContentWithFallbacks(content, fallbacks);
@@ -33,6 +37,7 @@ const RichTextWrapper = ({
       className={`rte ${className ?? ''}`}
       data-component="helpers/fieldwrappers/richtextwrapper"
       dangerouslySetInnerHTML={{ __html: updatedContent }}
+      {...getCSLPAttributes(cslpAttribute)}
     />
   );
 };

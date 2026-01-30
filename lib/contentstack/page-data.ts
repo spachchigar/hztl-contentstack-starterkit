@@ -30,8 +30,8 @@ export async function fetchPageData(
   // Fetch all data in parallel for maximum performance
   const [page, header, footer] = await Promise.all([
     getPage<PageTypeMap[typeof pageType]>(urlPath, pageContentTypeUID, currentLanguage),
-    getHeader(),
-    getFooter(),
+    getHeader(currentLanguage),
+    getFooter(currentLanguage),
   ]);
 
   return {
