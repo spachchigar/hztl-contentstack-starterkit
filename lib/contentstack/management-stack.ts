@@ -17,7 +17,6 @@
 import * as contentstackManagementSDK from '@contentstack/management';
 import { Locales } from '@contentstack/management/types/stack/contentType/entry';
 import { Locale } from '@contentstack/management/types/stack/locale';
-import { LanguageService } from '../services/language-service';
 
 /**
  * Configuration options for management client

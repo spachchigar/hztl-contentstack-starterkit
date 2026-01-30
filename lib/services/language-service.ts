@@ -58,13 +58,7 @@ class LanguageService {
       console.warn('Failed to save language preference to localStorage:', error);
     }
 
-    // Save to cookie for server-side access (accessible in middleware)
-    try {
-      document.cookie = `${LANGUAGE_PREFERENCE_COOKIE}=${baseLanguage}; path=/; max-age=${365 * 24 * 60 * 60
-        }; SameSite=Lax`;
-    } catch (error) {
-      console.warn('Failed to save language preference to cookie:', error);
-    }
+    // cookie for server-side is stored in the action for atomicity
   }
 
   /**
