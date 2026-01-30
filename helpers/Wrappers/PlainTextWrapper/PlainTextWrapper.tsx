@@ -4,11 +4,14 @@ import React, { JSX } from 'react';
 //Local
 import { useContentWithFallbacks } from '@/lib/hooks/useContentWithFallbacks';
 import { ReplacementToken, tokenReplace } from '@/utils/string-utils';
+import { getCSLPAttributes } from '@/utils/type-guards';
+import { CSLPFieldMapping } from '@/.generated';
 
 interface PlainTextWrapperProps extends React.HTMLAttributes<HTMLHeadingElement> {
   fallbacks?: (string | undefined)[];
   tokens?: ReplacementToken[];
   tag?: string;
+  cslpAttribute?: CSLPFieldMapping
 }
 
 const PlainTextWrapper = ({
@@ -17,6 +20,7 @@ const PlainTextWrapper = ({
   tokens,
   className,
   tag = 'span',
+  cslpAttribute,
   ...props
 }: PlainTextWrapperProps): JSX.Element => {
   const renderedContent = useContentWithFallbacks(content, fallbacks);
@@ -36,6 +40,7 @@ const PlainTextWrapper = ({
       data-component="helpers/fieldwrappers/plaintextwrapper"
       className={className}
       dangerouslySetInnerHTML={{ __html: updatedContent }}
+      {...getCSLPAttributes(cslpAttribute)}
     />
   );
 };

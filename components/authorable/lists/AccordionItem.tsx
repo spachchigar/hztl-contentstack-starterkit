@@ -109,6 +109,7 @@ export const AccordionItem = withStandardComponentWrapper((props: IAccordionItem
               className={richTextWrapper()}
               content={content}
               tabIndex={-1}
+              cslpAttribute={props.$?.content}
               {...getTestProps(`content`)}
             />
           </div>

@@ -51,9 +51,9 @@ export const Section = withStandardComponentWrapper(
                 })}
               >
                 <div className={sectionHeaderWrapper()}>
-                  <PlainTextWrapper className={sectionTitle()} content={title} tag="h2" />
+                  <PlainTextWrapper className={sectionTitle()} content={title} tag="h2" cslpAttribute={props.$?.title} />
                   <span className={sectionDescription()}>
-                    <PlainTextWrapper content={description} />
+                    <PlainTextWrapper content={description} cslpAttribute={props.$?.description} />
                   </span>
                 </div>
                 <ReferencePlaceholder references={section_items ?? []} />

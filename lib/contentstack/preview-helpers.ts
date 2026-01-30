@@ -9,9 +9,9 @@ import { isPreviewModeEnabled } from './delivery-stack';
  * @param entry - The entry to add editable tags to
  * @param contentTypeUid - The content type UID
  */
-export function addEditableTagsIfPreview(entry: any, contentTypeUid: string): void {
+export function addEditableTagsIfPreview(entry: any, contentTypeUid: string, locale: string): void {
   if (isPreviewModeEnabled()) {
-    contentstack.Utils.addEditableTags(entry, contentTypeUid, true);
+    contentstack.Utils.addEditableTags(entry, contentTypeUid, true, locale);
   }
 }
 
