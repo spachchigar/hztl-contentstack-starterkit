@@ -1,20 +1,4 @@
 const nextConfig = {
-  webpack: (config, { isServer }) => {
-    // Fix for @contentstack/utils trying to use fs module in client-side code
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        path: false,
-        os: false,
-        crypto: false,
-        stream: false,
-        buffer: false,
-        util: false,
-      };
-    }
-    return config;
-  },
   images: {
     remotePatterns: [
       {

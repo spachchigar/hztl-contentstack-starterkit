@@ -1,7 +1,6 @@
 // Global
 import { useCallback, useEffect, useRef } from 'react';
 import { tv } from 'tailwind-variants';
-import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 
 // Local
@@ -11,6 +10,7 @@ import { useGlobalLabels } from '@/context/GlobalLabelContext';
 import { LANGUAGE_DETAILS, type LanguageDetail } from '@/constants/locales';
 import { isLanguageSupported } from '@/lib/contentstack/language';
 import { LanguageService } from '@/lib/services/language-service';
+import { setLanguagePreference } from '@/app/actions/language';
 
 /**
  * LanguageSelector Component
@@ -124,22 +124,27 @@ const LanguageSelector = () => {
     [isOpen, setIsOpen, closeAllMenus]
   );
 
-  const handleLanguageSelect = useCallback((langCode: string) => {
-    LanguageService.saveLanguagePreference(langCode);
-    setIsOpen(false);
-    closeAllMenus();
-  }, [setIsOpen, closeAllMenus]);
-
-  // ============================================================================
-  // Render Helpers
-  // ============================================================================
-
   /**
    * Get URL path for a language switch
    */
   const getLanguageHref = (langCode: string): string => {
     return LanguageService.getLanguageUrlPath(langCode, pathWithoutLocale);
   };
+
+  const handleLanguageSelect = useCallback(async (langCode: string) => {
+    // Save the language preference
+    LanguageService.saveLanguagePreference(langCode);
+    setIsOpen(false);
+    closeAllMenus();
+
+    // Set the language preference cookie server-side + redirect atomically
+    await setLanguagePreference(langCode, getLanguageHref(langCode));
+  }, [setIsOpen, closeAllMenus, getLanguageHref]);
+
+  // ============================================================================
+  // Render Helpers
+  // ============================================================================
+
 
   /**
    * Generate aria label for language option
@@ -208,12 +213,10 @@ const LanguageSelector = () => {
           <ul className={styles.dropDownMenuList()}>
             {availableLanguages.map((language) => {
               const isSelected = currentLanguage?.langCode === language.langCode;
-              const href = getLanguageHref(language.langCode);
 
               return (
                 <li key={language.langCode} role="none">
-                  <Link
-                    href={href}
+                  <button
                     role="menuitem"
                     aria-current={isSelected ? 'page' : undefined}
                     aria-label={getLanguageAriaLabel(language, isSelected)}
@@ -234,7 +237,7 @@ const LanguageSelector = () => {
                     {isSelected && (
                       <span className="sr-only">{selectedLabel}</span>
                     )}
-                  </Link>
+                  </button>
                 </li>
               );
             })}

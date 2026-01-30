@@ -43,8 +43,8 @@ export function middleware(request: NextRequest) {
       const pathWithoutLocale = '/' + segments.slice(2).join('/');
       const url = request.nextUrl.clone();
       url.pathname = pathWithoutLocale || '/';
-      response = NextResponse.redirect(url, 301);
       shouldUpdateCookie = true;
+      response = NextResponse.redirect(url, 301);
     } else {
       // Non-default locales: allow through
       shouldUpdateCookie = true;

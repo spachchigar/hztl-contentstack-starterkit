@@ -114,6 +114,12 @@ export const CheckBox = forwardRef<
   ) => {
     const checkboxId = id || name || '';
     const groupId = `${checkboxId}-group`;
+    const [selectedValues, setSelectedValues] = useState<string[]>(() => {
+      if (type === 'Checkbox') {
+        return processedOptions.filter((option) => option.checked).map((option) => option.value);
+      }
+      return [];
+    });
 
     const processedOptions: CheckBoxOption[] = options_group
       ? Array.isArray(options_group)
@@ -168,13 +174,6 @@ export const CheckBox = forwardRef<
         </div>
       );
     }
-
-    const [selectedValues, setSelectedValues] = useState<string[]>(() => {
-      if (type === 'Checkbox') {
-        return processedOptions.filter((option) => option.checked).map((option) => option.value);
-      }
-      return [];
-    });
 
     const handleCheckboxChange = (optionValue: string, checked: boolean) => {
       if (type === 'Checkbox') {
