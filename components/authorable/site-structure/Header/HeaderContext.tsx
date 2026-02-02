@@ -109,6 +109,7 @@ export const HeaderProvider = ({ children }: { children: React.ReactNode }) => {
       showSearch ||
       isMobileLanguageSelectorOpen
       : isDesktopDropdownOpen !== null || showSearch || isDesktopLanguageSelectorOpen;
+
     setIsOverlayVisible(shouldShowOverlay);
   }, [
     isMobile,

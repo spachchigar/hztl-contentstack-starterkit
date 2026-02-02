@@ -1,7 +1,7 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { IPage } from '@/.generated';
-import { Header } from '@/components/authorable/Header';
+import { Header } from '@/components/authorable/site-structure/Header/Header';
 import { Footer } from '@/components/authorable/Footer';
 import { tv } from 'tailwind-variants';
 import BackToTop from '@/components/authorable/site-structure/BackToTop/BackToTop';
@@ -61,7 +61,7 @@ export async function SharedPageLayout({
     <>
       <div className="prod-mode">
         <div className={mainClass()} tabIndex={-1}>
-          {header && <Header />}
+          {header && <Header {...header} />}
           <main>
             <div id="content">
               <MainLayout page={page} pageContentTypeUID={pageContentTypeUID} />

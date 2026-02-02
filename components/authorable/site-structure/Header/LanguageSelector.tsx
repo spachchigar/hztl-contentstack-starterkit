@@ -5,7 +5,7 @@ import { useParams, usePathname } from 'next/navigation';
 
 // Local
 import SvgIcon from '@/helpers/SvgIcon/SvgIcon';
-import { useHeader } from '@/context/HeaderContext';
+import { useHeader } from './HeaderContext';
 import { useGlobalLabels } from '@/context/GlobalLabelContext';
 import { LANGUAGE_DETAILS, type LanguageDetail } from '@/constants/locales';
 import { isLanguageSupported } from '@/lib/contentstack/language';

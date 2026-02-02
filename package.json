@@ -36,6 +36,7 @@
     "@figma/rest-api-spec": "^0.23.0",
     "@googlemaps/markerclusterer": "^2.6.2",
     "@hookform/resolvers": "^5.2.1",
+    "@next/third-parties": "^14.2.7",
     "@timbenniks/contentstack-endpoints": "^1.0.10",
     "@types/react-google-recaptcha": "^2.1.9",
     "autoprefixer": "^10.4.19",
