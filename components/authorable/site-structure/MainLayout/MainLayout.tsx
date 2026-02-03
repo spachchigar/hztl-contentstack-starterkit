@@ -3,8 +3,6 @@
 import { IPage } from "@/.generated";
 import { ComponentRenderer } from "@/components/primitives/ComponentRenderer";
 import { ContentstackLivePreview } from "@/components/primitives/ContentstackLivePreview";
-import LanguageSelector from "@/components/primitives/LanguageSelector";
-import { HeaderProvider } from "@/context/HeaderContext";
 import { useScrollElementIntoView } from "@/lib/hooks/useScrollElementIntoView";
 import { JSX, useRef } from "react";
 import { tv } from "tailwind-variants";
@@ -30,21 +28,23 @@ export const MainLayout = ({ page, pageContentTypeUID = "page" }: MainLayoutProp
         },
     };
 
-    const { base } = TAILWIND_VARIANTS();
+    const { base, mainContent, mainContentWrapper } = TAILWIND_VARIANTS();
     return (
-        <div className={base()}
-            ref={mainLayoutRef}
-            id={page.uid}
-            data-component="authorable/shared/site-structure/main-layout/main-layout"
-        >
-            <HeaderProvider>
-                <LanguageSelector />
-            </HeaderProvider>
-            {(() => {
-                return pageTypeMapping[pageContentTypeUID as keyof typeof pageTypeMapping]();
-            })()}
-            <ContentstackLivePreview />
-        </div>
+        <>
+            <div className={mainContentWrapper()}>
+                <div id="main-content" className={mainContent()}></div>
+            </div>
+            <div className={base()}
+                ref={mainLayoutRef}
+                id={page.uid}
+                data-component="authorable/shared/site-structure/main-layout/main-layout"
+            >
+                {(() => {
+                    return pageTypeMapping[pageContentTypeUID as keyof typeof pageTypeMapping]();
+                })()}
+                <ContentstackLivePreview />
+            </div>
+        </>
     )
 }
 
@@ -55,10 +55,17 @@ const TAILWIND_VARIANTS = tv({
             'grid-cols-1',
             'm-auto',
             'w-full',
-            'max-w-xl-desktop',
+            'max-w-screen-2xl',
             'px-6',
             'md:px-12',
             'xl:px-20'
         ],
+        mainContentWrapper: [
+            'relative',
+        ],
+        mainContent: [
+            'absolute',
+            'left-0',
+        ]
     },
 });

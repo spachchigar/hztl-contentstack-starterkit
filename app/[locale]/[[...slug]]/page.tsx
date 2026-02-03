@@ -94,11 +94,11 @@ export async function generateMetadata(props: SlugPageProps): Promise<Metadata> 
     if (localesList && localesList.locales.length > 0) {
       languageUrls = localesList.locales.reduce((acc, locale) => {
         // Skip non-localized locales and default locale
-        if (locale.code !== 'en-us' && !locale.localized) return acc;
+        if (locale.code !== DEFAULT_LOCALE && !locale.localized) return acc;
 
         // Set default locale
-        if (locale.code === 'en-us') {
-          acc['en-us'] = `${baseUrl}${urlPath}`;
+        if (locale.code === DEFAULT_LOCALE) {
+          acc[DEFAULT_LOCALE] = `${baseUrl}${urlPath}`;
           acc['x-default'] = `${baseUrl}${urlPath}`;
           return acc;
         }

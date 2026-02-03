@@ -1,11 +1,10 @@
 // Global
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { tv } from 'tailwind-variants';
 import { useParams, usePathname } from 'next/navigation';
 
 // Local
 import SvgIcon from '@/helpers/SvgIcon/SvgIcon';
-import { useHeader } from '@/context/HeaderContext';
 import { useGlobalLabels } from '@/context/GlobalLabelContext';
 import { LANGUAGE_DETAILS, type LanguageDetail } from '@/constants/locales';
 import { isLanguageSupported } from '@/lib/contentstack/language';
@@ -25,16 +24,8 @@ const LanguageSelector = () => {
   const params = useParams();
   const pathname = usePathname();
   const { globalLabels } = useGlobalLabels();
+  const [isOpen, setIsOpen] = useState(false);
 
-  const {
-    isMobile,
-    isMobileLanguageSelectorOpen,
-    isDesktopLanguageSelectorOpen,
-    setMobileLanguageSelectorOpen,
-    setDesktopLanguageSelectorOpen,
-    closeDesktopMenus,
-    closeMobileMenu,
-  } = useHeader();
 
   // Refs for click-outside detection
   const selectRef = useRef<HTMLDivElement>(null);
@@ -57,11 +48,6 @@ const LanguageSelector = () => {
   const availableLanguages = LANGUAGE_DETAILS || [];
 
   const currentLanguage = availableLanguages.find((lang) => lang.langCode === currentLocale);
-
-  // Determine mobile vs desktop state
-  const isOpen = isMobile ? isMobileLanguageSelectorOpen : isDesktopLanguageSelectorOpen;
-  const setIsOpen = isMobile ? setMobileLanguageSelectorOpen : setDesktopLanguageSelectorOpen;
-  const closeAllMenus = isMobile ? closeMobileMenu : closeDesktopMenus;
 
   // Labels with fallbacks
   const ariaLabel = globalLabels.country_selector_aria_label || 'Select a language';
@@ -87,7 +73,6 @@ const LanguageSelector = () => {
         !dropdownRef.current.contains(target)
       ) {
         setIsOpen(false);
-        closeAllMenus();
       }
     };
 
@@ -96,7 +81,7 @@ const LanguageSelector = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen, setIsOpen, closeAllMenus]);
+  }, [isOpen, setIsOpen]);
 
   // ============================================================================
   // Event Handlers
@@ -118,10 +103,9 @@ const LanguageSelector = () => {
         setIsOpen(!isOpen);
       } else if (event.key === 'Escape') {
         setIsOpen(false);
-        closeAllMenus();
       }
     },
-    [isOpen, setIsOpen, closeAllMenus]
+    [isOpen, setIsOpen]
   );
 
   /**
@@ -135,11 +119,10 @@ const LanguageSelector = () => {
     // Save the language preference
     LanguageService.saveLanguagePreference(langCode);
     setIsOpen(false);
-    closeAllMenus();
 
     // Set the language preference cookie server-side + redirect atomically
     await setLanguagePreference(langCode, getLanguageHref(langCode));
-  }, [setIsOpen, closeAllMenus, getLanguageHref]);
+  }, [setIsOpen, getLanguageHref]);
 
   // ============================================================================
   // Render Helpers
@@ -310,9 +293,7 @@ const TAILWIND_VARIANTS = tv({
     dropDownMenuWrapper: [
       'absolute',
       'top-full',
-      'left-0',
       'right-0',
-      'md:right-auto',
       'md:min-w-[200px]',
       'mt-2',
       'bg-white',

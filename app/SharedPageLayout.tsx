@@ -55,7 +55,7 @@ export async function SharedPageLayout({
     <>
       <div className="prod-mode">
         <div tabIndex={-1}>
-          {header && <Header />}
+          {header && <Header {...header} />}
           <main>
             <div id="content">
               <MainLayout page={page} pageContentTypeUID={pageContentTypeUID} />
