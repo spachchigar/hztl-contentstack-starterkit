@@ -83,6 +83,13 @@ export async function generateMetadata(props: SlugPageProps): Promise<Metadata> 
   try {
     const page = await getPage<IPage>(urlPath, 'page', resolvedParams?.locale);
 
+    if (!page) {
+      return {
+        title: 'Page Title',
+        description: 'Page Description',
+      }
+    }
+
     //! Commenting out for now as it is not working as expected   
     // let languageUrls: Record<string, string> | undefined;
     // let localesList: Locales | undefined;
