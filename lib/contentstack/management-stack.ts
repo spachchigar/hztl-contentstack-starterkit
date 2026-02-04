@@ -88,7 +88,6 @@ export async function createManagementClient() {
         // Initialize management SDK client
         const client = contentstackManagementSDK.client();
 
-        // await client.login({ email: "spachchigar@horizontal.com", password: "Shubham@contentstack19" })
         // Return stack instance for the specified API key
         const stack = client.stack({
             api_key: config.apiKey,

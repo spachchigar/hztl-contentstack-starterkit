@@ -6,8 +6,6 @@ import { stack } from '@/lib/contentstack/delivery-stack';
 import { SharedPageLayout } from '@/app/SharedPageLayout';
 import { IPage } from '@/.generated';
 import { headers } from 'next/headers';
-import { Locales } from '@contentstack/management/types/stack/contentType/entry';
-import { getEntryLocales } from '@/lib/contentstack/management-stack';
 import { DEFAULT_LOCALE } from '@/constants/locales';
 
 // Force dynamic rendering (SSR)
@@ -84,28 +82,30 @@ export async function generateMetadata(props: SlugPageProps): Promise<Metadata> 
 
   try {
     const page = await getPage<IPage>(urlPath, 'page', resolvedParams?.locale);
-    let localesList: Locales | undefined;
-    let languageUrls: Record<string, string> | undefined;
 
-    if (page) {
-      localesList = await getEntryLocales(page.uid, 'page')
-    }
+    //! Commenting out for now as it is not working as expected   
+    // let languageUrls: Record<string, string> | undefined;
+    // let localesList: Locales | undefined;
+    // if (page) {
+    //   localesList = await getEntryLocales(page.uid, 'page')
+    // }
 
-    if (localesList && localesList.locales.length > 0) {
-      languageUrls = localesList.locales.reduce((acc, locale) => {
-        // Skip non-localized locales and default locale
-        if (locale.code !== DEFAULT_LOCALE && !locale.localized) return acc;
+    // if (localesList && localesList.locales.length > 0) {
+    //   languageUrls = localesList.locales.reduce((acc, locale) => {
+    //     // Skip non-localized locales and default locale
+    //     if (locale.code !== DEFAULT_LOCALE && !locale.localized) return acc;
 
-        // Set default locale
-        if (locale.code === DEFAULT_LOCALE) {
-          acc[DEFAULT_LOCALE] = `${baseUrl}${urlPath}`;
-          return acc;
-        }
+    //     // Set default locale
+    //     if (locale.code === DEFAULT_LOCALE) {
+    //       acc[DEFAULT_LOCALE] = `${baseUrl}${urlPath}`;
+    //       return acc;
+    //     }
 
-        acc[locale.code as string] = `${baseUrl}/${locale.code}${urlPath}`;
-        return acc;
-      }, {} as Record<string, string>);
-    }
+    //     acc[locale.code as string] = `${baseUrl}/${locale.code}${urlPath}`;
+    //     return acc;
+    //   }, {} as Record<string, string>);
+
+    // }
 
     const metadata = {
       pageTitle: page?.seo_data?.title || 'Page',
@@ -124,7 +124,6 @@ export async function generateMetadata(props: SlugPageProps): Promise<Metadata> 
       robotsIndex: page?.seo_data?.robots?.index || false,
       robotsFollow: page?.seo_data?.robots?.follow || false,
       robotsMaxImagePreview: page?.seo_data?.robots?.max_image_preview || 'standard',
-      LanguageUrls: languageUrls,
     }
 
     const faviconUrl = page?.seo_data?.icons?.icon?.url || '/favicon.ico';
@@ -136,7 +135,6 @@ export async function generateMetadata(props: SlugPageProps): Promise<Metadata> 
       keywords: metadata.MetaKeywords,
       alternates: {
         canonical: cannonicalUrl,
-        languages: metadata.LanguageUrls,
       },
       icons: faviconUrl,
       openGraph: {
