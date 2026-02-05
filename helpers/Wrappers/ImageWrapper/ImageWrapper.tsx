@@ -99,13 +99,6 @@ export interface NextImageProps extends React.ImgHTMLAttributes<HTMLImageElement
  * @param height - Image height as number or string
  * @returns Object with validated width and height, or null if invalid
  * 
- * @example
- * ```tsx
- * validateDimensions(800, 600) // { width: 800, height: 600 }
- * validateDimensions('800', '600') // { width: 800, height: 600 }
- * validateDimensions(-100, 200) // null (invalid width)
- * validateDimensions(800, 'invalid') // null (invalid height)
- * ```
  */
 const validateDimensions = (width?: number | string, height?: number | string) => {
   if (!width || !height) return null;
@@ -131,14 +124,6 @@ const validateDimensions = (width?: number | string, height?: number | string) =
  * @param responsive - Whether the image should be responsive
  * @returns Optimized sizes attribute string
  * 
- * @example
- * ```tsx
- * getOptimalSizes(undefined, 1200, false) 
- * // "(max-width: 1200px) 100vw, 1200px"
- * 
- * getOptimalSizes(undefined, undefined, true)
- * // "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
- * ```
  */
 const getOptimalSizes = (
   customSizes?: string,
@@ -152,55 +137,6 @@ const getOptimalSizes = (
   return '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw';
 };
 
-/**
- * ImageWrapper Component
- * 
- * A production-ready, optimized image wrapper component built on Next.js Image.
- * Provides automatic optimization, responsive loading, and Contentstack integration.
- * 
- * Features:
- * - Automatic image optimization via Next.js Image
- * - Responsive image loading with optimal sizes
- * - Dimension validation and sanitization
- * - Lazy loading support
- * - Blur placeholder support
- * - Live preview support (Contentstack)
- * - Performance optimized with memoization
- * 
- * @param props - ImageWrapper component props
- * @param props.wrapperClassName - Additional CSS classes for wrapper div
- * @param props.imageClassName - Additional CSS classes for image element
- * @param props.image - Enhanced image object from Contentstack
- * @param props.priority - Load image with priority (for above-fold images)
- * @param props.sizes - Custom responsive sizes attribute
- * @param props.quality - Image quality 1-100 (default: 75)
- * @param props.fill - Whether image should fill parent container
- * @param props.loading - Loading strategy: 'lazy' or 'eager'
- * @param props.placeholder - Placeholder type: 'blur' or 'empty'
- * @param props.blurDataURL - Base64 data URL for blur placeholder
- * 
- * @returns JSX.Element - Rendered image component
- * 
- * @example
- * ```tsx
- * <ImageWrapper
- *   image={contentstackImage}
- *   priority={true}
- *   quality={90}
- *   sizes="(max-width: 768px) 100vw, 50vw"
- * />
- * ```
- * 
- * @example
- * ```tsx
- * <ImageWrapper
- *   image={contentstackImage}
- *   fill={true}
- *   placeholder="blur"
- *   blurDataURL="data:image/jpeg;base64,..."
- * />
- * ```
- */
 const ImageWrapper = ({
   wrapperClassName,
   imageClassName,
@@ -363,19 +299,6 @@ const ImageWrapper = ({
 
 export default ImageWrapper;
 
-/**
- * Tailwind Variants configuration for ImageWrapper styling
- * 
- * Defines the base styles and variants for the wrapper element.
- * Uses tailwind-variants for type-safe, composable styling.
- * 
- * Variants:
- * - isFill: Controls positioning (relative for fill, static otherwise)
- * 
- * Base classes:
- * - w-full: Full width
- * - h-full: Full height
- */
 const TAILWIND_VARIANTS = tv({
   slots: {
     wrapperBase: ['w-full', 'h-full'],
