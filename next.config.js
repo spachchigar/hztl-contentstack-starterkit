@@ -27,6 +27,5 @@ const nextConfig = {
 module.exports = () => {
   // Run the base config through any configured plugins
   const finalNextConfig = Object.values(plugins).reduce((acc, plugin) => plugin(acc), nextConfig);
-  // console.log('finalNextConfig', JSON.stringify(finalNextConfig, null, 2));
   return finalNextConfig;
 };
