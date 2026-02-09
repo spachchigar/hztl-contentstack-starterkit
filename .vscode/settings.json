@@ -34,5 +34,6 @@
     "tailwindCSS.emmetCompletions": true,
     "files.associations": {
         "*.css": "tailwindcss"
-    }
+    },
+    "search.useIgnoreFiles": true
 }

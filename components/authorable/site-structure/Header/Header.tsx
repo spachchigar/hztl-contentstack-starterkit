@@ -41,7 +41,7 @@ export const Header = (props: IHeader) => {
   return (<header className={base()} id="header">
     <div className={wrapper()}>
       <div className={inner()}>
-        <div className={menuWrapper()} role="menubar">
+        <div className={menuWrapper()}>
           <div className={menuContainer()}>
             <Logo logo={props.logo} logoLink={props.logo_link} />
           </div>

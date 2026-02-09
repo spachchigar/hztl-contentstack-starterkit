@@ -353,7 +353,63 @@ page_sitemap_setting: {
   change_frequency: 'weekly' // always, hourly, daily, weekly, monthly, yearly, never
 }
 ```
+---
 
+## 🧩 Helper Components
+
+The starter kit includes production-ready wrapper components for common content types that integrate seamlessly with Contentstack and Next.js.
+
+### ImageWrapper
+
+**Location:** `helpers/Wrappers/ImageWrapper/ImageWrapper.tsx`
+
+A production-ready image wrapper component that wraps Next.js Image with Contentstack integration. Handles responsive images, domain validation, error fallbacks, and Live Preview attributes. Supports both static dimensions and fill mode, with automatic optimization for Contentstack CDN images.
+
+**Key Features:**
+- ✅ Next.js Image optimization with automatic domain validation
+- ✅ Responsive image handling with optimal `sizes` attribute generation
+- ✅ Error handling with automatic fallback image display
+- ✅ Contentstack Live Preview integration with editable attributes
+
+**Usage:**
+```tsx
+import ImageWrapper from '@/helpers/Wrappers/ImageWrapper/ImageWrapper';
+
+<ImageWrapper
+  image={contentstackImage}
+  priority={true}
+  sizes="(max-width: 768px) 100vw, 50vw"
+  quality={90}
+/>
+```
+
+### ButtonWrapper
+
+**Location:** `helpers/Wrappers/ButtonWrapper/ButtonWrapper.tsx`
+
+Flexible button/link wrapper component that seamlessly handles both navigation links and interactive buttons. Integrates with Contentstack CTAs, provides multiple variants and sizes, and includes comprehensive accessibility features. Automatically detects external links and applies appropriate security attributes.
+
+**Key Features:**
+- ✅ Dual-mode component (link/button) with automatic detection
+- ✅ Multiple variants (primary, secondary, outline, ghost, danger, link) and sizes
+- ✅ Accessibility features (ARIA labels, focus rings, disabled states)
+- ✅ Contentstack CTA integration with external link handling
+
+**Usage:**
+```tsx
+import { ButtonWrapper } from '@/helpers/Wrappers/ButtonWrapper/ButtonWrapper';
+
+// As a link (from Contentstack CTA)
+<ButtonWrapper cta={contentstackCta} />
+
+// As a button
+<ButtonWrapper 
+  href="/contact" 
+  customLabel="Contact Us"
+  variant="primary"
+  size="lg"
+/>
+```
 ---
 
 ## 🎨 Adding New Components
