@@ -49,7 +49,7 @@ export async function SharedPageLayout({
   }
 
   // If no 404 page found from CMS, show default 404 page
-  if (!page || page === undefined) {
+  if (!page) {
     notFound();
   }
 
