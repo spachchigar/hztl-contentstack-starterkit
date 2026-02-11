@@ -1,6 +1,3 @@
-// SEE: https://nextjs.org/docs/app/api-reference/components/image
-// SEE: https://refine.dev/blog/using-next-image/#src
-
 'use client';
 
 // Global

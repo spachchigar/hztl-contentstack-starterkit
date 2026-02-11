@@ -2,7 +2,7 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import { IPage } from '@/.generated';
 import { Header } from '@/components/authorable/site-structure/Header/Header';
-import { Footer } from '@/components/authorable/Footer';
+import { Footer } from '@/components/authorable/site-structure/Footer/Footer';
 import { BackToTop } from '@/components/authorable/site-structure/BackToTop/BackToTop';
 import { fetchPageData } from '@/lib/contentstack/page-data';
 import { MainLayout } from '@/components/authorable/site-structure/MainLayout/MainLayout';

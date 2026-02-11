@@ -2,7 +2,7 @@
 import { IDictionaryItems } from '@/.generated';
 import { GlobalLabelsProvider } from '@/context/GlobalLabelContext';
 // Initialize component registry early to avoid circular dependencies
-import '@/utils/init-component-registry';
+import '@/temp/registered-components';
 
 export function Providers({
   children,

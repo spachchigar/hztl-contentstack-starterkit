@@ -1,3 +1,5 @@
+'use client';
+
 import { IEnhancedCta } from "@/.generated"
 import { cn } from "@/utils/cn";
 import { getCSLPAttributes } from "@/utils/type-guards";

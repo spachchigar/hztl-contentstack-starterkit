@@ -6,7 +6,7 @@ import chokidar from 'chokidar';
 // CONFIGURATION: Add your component directories here (scans recursively)
 // ============================================================================
 const ALLOWED_COMPONENT_PATHS = [
-  'components/authorable',
+  'components/authorable/shared',
   'components/ui',
   // Add more paths here as needed
   // Example: 'components/shared',
@@ -17,6 +17,7 @@ const ALLOWED_COMPONENT_PATHS = [
 const registeredComponentsDirs = ALLOWED_COMPONENT_PATHS.map((dir) =>
   path.join(__dirname, '..', dir)
 );
+
 
 // Path to the config directory where we'll create the barrel file
 const configDir = path.join(__dirname, '..', 'temp');
@@ -40,9 +41,11 @@ const findComponentFiles = (dirPath: string, componentFiles: Array<{ file: strin
 
   for (const entry of entries) {
     const fullPath = path.join(dirPath, entry.name);
+    // Using statSync for more reliable file type detection
+    const stats = fs.statSync(fullPath);
 
     // Skip node_modules, .git, and other hidden directories
-    if (entry.isDirectory() && !entry.name.startsWith('.') && entry.name !== 'node_modules') {
+    if (stats.isDirectory() && !entry.name.startsWith('.') && entry.name !== 'node_modules') {
       // Recursively scan subdirectories
       findComponentFiles(fullPath, componentFiles);
     } else if (entry.isFile()) {
