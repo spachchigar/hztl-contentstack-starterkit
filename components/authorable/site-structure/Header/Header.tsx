@@ -1,11 +1,10 @@
 'use client';
 
-import { IEnhancedImage, IEnhancedLink, IHeader } from "@/.generated";
+import { IEnhancedImage, IHeader, ILink } from "@/.generated";
 import { useIsScrolled } from "@/lib/hooks/useIsScrolled";
 import { tv } from "tailwind-variants";
 import { LanguageSelector } from './LanguageSelector';
 import Link from "next/link";
-import { getCSLPAttributes } from "@/utils/type-guards";
 import ImageWrapper from "@/helpers/Wrappers/ImageWrapper/ImageWrapper";
 
 export const Logo = ({
@@ -13,7 +12,7 @@ export const Logo = ({
   logoLink,
 }: {
   logo?: IEnhancedImage;
-  logoLink?: IEnhancedLink;
+  logoLink?: ILink;
 }) => {
   const { logoContainer } = TAILWIND_VARIANTS();
 
@@ -22,8 +21,7 @@ export const Logo = ({
   return (
     <div className={logoContainer()}>
       <Link
-        href={logoLink?.link?.href ?? '/'}
-        {...getCSLPAttributes(logoLink.$?.link)}
+        href={logoLink?.href ?? '/'}
       >
         <ImageWrapper
           image={logo}

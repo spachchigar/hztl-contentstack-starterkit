@@ -15,7 +15,6 @@ A production-ready starter kit for building headless CMS-powered websites using 
 - ✅ **CMS-Managed Redirects** - Edge-based redirect management with dual-layer caching
 - ✅ **Dynamic XML Sitemap** - Auto-generated sitemap with multilingual hreflang support
 - ✅ **SEO Optimized** - Comprehensive metadata with OpenGraph, Twitter Cards, and hreflang
-- ✅ **Dynamic Forms** - React Hook Form with Yup validation and reCAPTCHA
 - ✅ **Type Safety** - Auto-generated TypeScript types from Contentstack
 - ✅ **Server-Side Rendering** - Fast initial page loads with Next.js App Router
 - ✅ **Image Optimization** - Next.js Image with AVIF/WebP support
@@ -197,75 +196,6 @@ npm run start
 
 ---
 
-## 📁 Project Structure
-
-```
-hztl-contentstack-starterkit/
-│
-├── app/                              # Next.js App Router
-│   ├── [locale]/                     # Locale-based routing
-│   │   ├── [[...slug]]/              # Catch-all dynamic routes
-│   │   │   └── page.tsx              # Main page component
-│   │   └── layout.tsx                # Locale layout
-│   ├── actions/                      # Server actions
-│   ├── api/                          # API routes
-│   │   └── redirect/                 # Redirect handling
-│   ├── layout.tsx                    # Root layout
-│   ├── sitemap.ts                    # Dynamic XML sitemap
-│   └── SharedPageLayout.tsx          # Shared page logic
-│
-├── components/
-│   ├── authorable/                   # CMS-editable components
-│   │   ├── Header.tsx
-│   │   ├── Footer.tsx
-│   │   ├── layout/                   # Layout components
-│   │   └── site-structure/           # Structure components
-│   ├── primitives/                   # Core components
-│   │   ├── ComponentRenderer.tsx     # Dynamic renderer
-│   │   ├── LanguageSelector.tsx      # Language switcher
-│   │   └── NotFound.tsx              # 404 component
-│   └── ui/                           # UI components
-│       └── forms/                    # Form system
-│
-├── lib/
-│   ├── contentstack/                 # Contentstack integration
-│   │   ├── delivery-stack.ts         # SDK initialization
-│   │   ├── entries.ts                # Entry fetching
-│   │   ├── language.ts               # Language utilities
-│   │   ├── live-preview.ts           # Live preview setup
-│   │   └── management-stack.ts       # Management API
-│   ├── hooks/                        # Custom React hooks
-│   └── services/                     # Business logic
-│
-├── utils/
-│   ├── ComponentMapper.ts            # Component registry
-│   ├── string-utils.ts               # String helpers
-│   └── yup-schema-generator.ts       # Form validation
-│
-├── constants/
-│   ├── locales.ts                    # Language config (auto-generated)
-│   └── form.ts                       # Form constants
-│
-├── scripts/
-│   ├── fetch-language.ts             # Fetch languages from CMS
-│   └── generate-component-mapper.ts  # Component registry generator
-│
-├── helpers/
-│   ├── SvgIcon/                      # Icon system
-│   └── Wrappers/                     # Content wrappers
-│
-├── context/                          # React contexts
-├── providers/                        # React providers
-├── functions/                        # Edge functions
-│   └── [proxy].edge.js               # Redirect edge handler
-├── middleware.ts                     # Next.js middleware
-├── next.config.mjs                   # Next.js config
-├── tailwind.config.js                # Tailwind config
-└── tsconfig.json                     # TypeScript config
-```
-
----
-
 ## 📜 Available Scripts
 
 | Command | Description |
@@ -294,7 +224,7 @@ All pages use a **catch-all route** (`[[...slug]]`) that:
 ### Component Mapping
 
 The **ComponentMapper** system:
-1. Scans `components/authorable/` directory
+1. Scans `components/authorable/shared` directory
 2. Registers components with PascalCase names
 3. Maps Contentstack component names to React components
 4. Provides fallback for missing components
@@ -416,10 +346,10 @@ import { ButtonWrapper } from '@/helpers/Wrappers/ButtonWrapper/ButtonWrapper';
 
 ### 1. Create Component File
 
-Create a new component in `components/authorable/`:
+Create a new component in `components/authorable/shared`:
 
 ```tsx
-// components/authorable/Hero.tsx
+// components/authorable/shared/Hero.tsx
 import { IExtendedProps } from '@/lib/types';
 
 interface HeroProps extends IExtendedProps {
@@ -581,37 +511,6 @@ The sitemap automatically includes:
 1. Go to [Bing Webmaster Tools](https://www.bing.com/webmasters)
 2. Add your site
 3. Submit sitemap: `https://yourdomain.com/sitemap.xml`
-
----
-
-## 🚢 Deployment
-
-### Environment Variables for Production
-
-Update these variables for production:
-
-```env
-NEXT_PUBLIC_CONTENTSTACK_ENVIRONMENT=production
-NEXT_PUBLIC_CONTENTSTACK_PREVIEW=false
-NEXT_PUBLIC_BASE_URL=https://yourdomain.com
-ENABLE_REDIRECTS=true
-```
-
-### Vercel Deployment
-
-1. Push code to GitHub/GitLab/Bitbucket
-2. Import project in Vercel
-3. Add environment variables
-4. Deploy
-
-### Other Platforms
-
-This is a standard Next.js app and can be deployed to:
-- Netlify
-- AWS Amplify
-- Google Cloud Platform
-- Azure Static Web Apps
-- Self-hosted Node.js server
 
 ---
 

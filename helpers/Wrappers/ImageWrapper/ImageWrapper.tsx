@@ -23,7 +23,7 @@ export interface ImageWrapperProps {
   /** Additional CSS classes to apply to the Image component */
   imageClassName?: string;
   /** Enhanced image object from Contentstack containing image data and metadata */
-  image?: IEnhancedImage;
+  image?: IEnhancedImage | null;
   /** Whether the image should be loaded with priority (above the fold images) */
   priority?: boolean;
   /** Responsive image sizes attribute for optimal loading */
