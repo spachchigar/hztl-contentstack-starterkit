@@ -2,8 +2,7 @@
 import React, { useEffect, useState, JSX } from 'react';
 
 // Local
-import { useContentWithFallbacks } from '@/lib/hooks/useContentWithFallbacks';
-import { ReplacementToken, tokenReplace } from '@/utils/string-utils';
+import { ReplacementToken } from '@/utils/string-utils';
 import { CSLPFieldMapping } from '@/.generated';
 import { getCSLPAttributes } from '@/utils/type-guards';
 
@@ -21,14 +20,10 @@ const RichTextWrapper = ({
   cslpAttribute,
   ...props
 }: RichTextWrapperProps): JSX.Element => {
-  const renderedContent = useContentWithFallbacks(content, fallbacks);
 
-  const updatedContent = useUpdatedRichTextContent({
-    content: renderedContent,
-    tokens,
-  });
+  const updatedContent = useUpdatedRichTextContent({ content });
 
-  // We should only render if it has a value, or if we are editing
+  // We should only render if it has a value
   if (!updatedContent) return <></>;
 
   return (
@@ -58,15 +53,14 @@ const NEW_TAB_ICON_STRING = `<span class="svg-icon inline-flex align-middle -ml-
     </svg>
   </span>`;
 
-function useUpdatedRichTextContent({ content, tokens }: RichTextWrapperProps) {
+function useUpdatedRichTextContent({ content }: RichTextWrapperProps) {
   // Replace tokens if present
-  const richTextContent = tokens ? tokenReplace(content, tokens) : content;
-  const [updatedContent, setUpdatedContent] = useState<string>(richTextContent || '');
+  const [updatedContent, setUpdatedContent] = useState<string>(content || '');
 
   // Run this client-side because we don't have access to the document server-side
   useEffect(() => {
     const template = document.createElement('template');
-    template.innerHTML = richTextContent || '';
+    template.innerHTML = content || '';
 
     // Find all links either either have target="_blank" or appear to be external due to starting with "http"
     const externalLinks = [...template.content.querySelectorAll('a')].filter(
@@ -101,7 +95,7 @@ function useUpdatedRichTextContent({ content, tokens }: RichTextWrapperProps) {
 
     // Update the content
     setUpdatedContent(template.innerHTML);
-  }, [richTextContent]);
+  }, [content]);
 
   return updatedContent;
 }

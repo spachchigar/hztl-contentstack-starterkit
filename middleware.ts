@@ -102,6 +102,6 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Skip all internal paths and special files
-    '/((?!_next/|healthz/favicon.ico|.well-known/|robots.txt|sitemap|.*\\..*).*)',
+    '/((?!_next/|api/|favicon.ico|.well-known/|robots.txt|sitemap|.*\\..*).*)',
   ],
 };

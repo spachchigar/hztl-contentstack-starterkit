@@ -10,14 +10,21 @@
     "react"
   ],
   "ignorePatterns": [
-    ".generated/**/*", 
-    "**/*.d.ts", 
+    ".generated/**/*",
+    "**/*.d.ts",
     "**/*.js",
     "lib/themes/**/*"
   ],
   "rules": {
     "@next/next/no-img-element": "off",
-    "jsx-a11y/alt-text": ["warn", { "elements": ["img"] }],
+    "jsx-a11y/alt-text": [
+      "warn",
+      {
+        "elements": [
+          "img"
+        ]
+      }
+    ],
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
@@ -25,23 +32,14 @@
         "argsIgnorePattern": "^_",
         "caughtErrorsIgnorePattern": "^_",
         "varsIgnorePattern": "^_|^pageType$",
-        "ignoreRestSiblings": true 
+        "ignoreRestSiblings": true
       }
     ],
     "@typescript-eslint/no-explicit-any": "off",
     "react-hooks/rules-of-hooks": "warn",
-    "jsx-quotes": ["error", "prefer-double"]
-  },
-  "overrides": [
-    {
-      "files": ["lib/themes/**/*.ts"]
-    },
-    {
-      "files": ["lib/contentstack-old.ts", "lib/page-data-old.ts"],
-      "rules": {
-        "@typescript-eslint/no-explicit-any": "off", // Disable for old files
-        "@typescript-eslint/no-unused-vars": "off" // Disable for old files
-      }
-    }
-  ]
+    "jsx-quotes": [
+      "error",
+      "prefer-double"
+    ]
+  }
 }

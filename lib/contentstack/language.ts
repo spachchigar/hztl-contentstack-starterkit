@@ -1,6 +1,6 @@
 // Importing the language service
-import { DEFAULT_LOCALE } from '@/constants/locales';
-import { LanguageService } from '@/lib/services/language-service';
+import { DEFAULT_LOCALE } from '../../constants/locales';
+import { LanguageService } from '../../lib/services/language-service';
 
 /**
  * Helper function to get current language

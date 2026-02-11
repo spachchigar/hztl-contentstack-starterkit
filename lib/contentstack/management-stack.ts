@@ -17,6 +17,7 @@
 import * as contentstackManagementSDK from '@contentstack/management';
 import { Locales } from '@contentstack/management/types/stack/contentType/entry';
 import { Locale } from '@contentstack/management/types/stack/locale';
+import { cache } from 'react';
 
 /**
  * Configuration options for management client
@@ -88,7 +89,6 @@ export async function createManagementClient() {
         // Initialize management SDK client
         const client = contentstackManagementSDK.client();
 
-        // await client.login({ email: "spachchigar@horizontal.com", password: "Shubham@contentstack19" })
         // Return stack instance for the specified API key
         const stack = client.stack({
             api_key: config.apiKey,
@@ -169,10 +169,9 @@ export async function testConnection(): Promise<boolean> {
  * @returns An array of locale codes (e.g., ['en-us', 'fr-fr']) if locales exist,
  *          or an empty array if no locales are found or an error occurs
  **/
-export async function getEntryLocales(
+export const getEntryLocales = cache(async (
     entryUid: string,
-    contentTypeUid: string
-): Promise<Locales | undefined> {
+    contentTypeUid: string) => {
     // Validate inputs
     if (!entryUid || !contentTypeUid) {
         console.error('getEntryLocales: entryUid and contentTypeUid are required');
@@ -195,5 +194,6 @@ export async function getEntryLocales(
             error instanceof Error ? error.message : error
         );
         return undefined;
+
     }
-}
+})

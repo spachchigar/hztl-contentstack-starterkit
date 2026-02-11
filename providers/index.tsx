@@ -4,7 +4,7 @@ import { GlobalLabelsProvider } from '@/context/GlobalLabelContext';
 import { Brands } from '@/helpers/Constants/Constant';
 import { BrandAndThemeProvider } from './BrandAndThemeContext';
 // Initialize component registry early to avoid circular dependencies
-import '@/utils/init-component-registry';
+import '@/temp/registered-components';
 
 export function Providers({
   children,

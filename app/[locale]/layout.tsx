@@ -4,8 +4,6 @@ import { Providers } from '@/providers';
 import { isLanguageSupported } from '@/lib/contentstack/language';
 import { getBrandForSiteName } from '@/utils/brand-helpers';
 import { SiteName } from '@/helpers/Constants/Constant';
-// Initialize component registry early to avoid circular dependencies
-import '@/utils/init-component-registry';
 
 type Props = {
   children: React.ReactNode;

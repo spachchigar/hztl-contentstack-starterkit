@@ -3,7 +3,7 @@ import {
   DEFAULT_LOCALE,
   SupportedLocale,
   LANGUAGES_WITHOUT_URL_PREFIX,
-} from '@/constants/locales';
+} from '../../constants/locales';
 
 const LANGUAGE_PREFERENCE_COOKIE = 'language-preference';
 const LANGUAGE_PREFERENCE_STORAGE_KEY = 'language-preference';

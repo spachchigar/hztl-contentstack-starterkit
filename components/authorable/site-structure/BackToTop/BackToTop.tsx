@@ -87,7 +87,7 @@ const tailwindVariants = tv({
   },
 });
 
-const BackToTop = () => {
+export const BackToTop = () => {
   const isScrolled = useIsScrolled();
 
   const { globalLabels } = useGlobalLabels();
@@ -122,5 +122,3 @@ const BackToTop = () => {
     </div>
   );
 };
-
-export default BackToTop;

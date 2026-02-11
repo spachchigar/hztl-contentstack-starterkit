@@ -2,11 +2,11 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import { IPage } from '@/.generated';
 import { Header } from '@/components/authorable/site-structure/Header/Header';
-import { Footer } from '@/components/authorable/Footer';
-import { tv } from 'tailwind-variants';
-import BackToTop from '@/components/authorable/site-structure/BackToTop/BackToTop';
+import { Footer } from '@/components/authorable/site-structure/Footer/Footer';
+import { BackToTop } from '@/components/authorable/site-structure/BackToTop/BackToTop';
 import { fetchPageData } from '@/lib/contentstack/page-data';
 import { MainLayout } from '@/components/authorable/site-structure/MainLayout/MainLayout';
+import { tv } from 'tailwind-variants';
 
 interface SharedPageLayoutProps {
   urlPath: string;
@@ -48,7 +48,7 @@ export async function SharedPageLayout({
   }
 
   // If no 404 page found from CMS, show default 404 page
-  if (!page || page === undefined) {
+  if (!page) {
     notFound();
   }
 

@@ -28,19 +28,23 @@ export const MainLayout = ({ page, pageContentTypeUID = "page" }: MainLayoutProp
         },
     };
 
-    const { base } = TAILWIND_VARIANTS();
+    const { base, mainContent, mainContentWrapper } = TAILWIND_VARIANTS();
     return (
-        <div
-            ref={mainLayoutRef}
-            className={base()}
-            id={page.uid}
-            data-component="authorable/shared/site-structure/main-layout/main-layout"
-        >
-            {(() => {
-                return pageTypeMapping[pageContentTypeUID as keyof typeof pageTypeMapping]();
-            })()}
-            <ContentstackLivePreview />
-        </div>
+        <>
+            <div className={mainContentWrapper()}>
+                <div id="main-content" className={mainContent()}></div>
+            </div>
+            <div className={base()}
+                ref={mainLayoutRef}
+                id={page.uid}
+                data-component="authorable/shared/site-structure/main-layout/main-layout"
+            >
+                {(() => {
+                    return pageTypeMapping[pageContentTypeUID as keyof typeof pageTypeMapping]();
+                })()}
+                <ContentstackLivePreview />
+            </div>
+        </>
     )
 }
 
@@ -55,12 +59,12 @@ const TAILWIND_VARIANTS = tv({
             'min-w-screen-dimensions-min-width',
             'px-general-spacing-margin-x',
         ],
-    },
-    variants: {
-        isSearchLayout: {
-            true: {
-                base: ['gap-0', '!pb-general-spacing-margin-y'],
-            },
-        },
+        mainContentWrapper: [
+            'relative',
+        ],
+        mainContent: [
+            'absolute',
+            'left-0',
+        ]
     },
 });

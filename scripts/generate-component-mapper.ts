@@ -2,26 +2,69 @@ import fs from 'fs';
 import path from 'path';
 import chokidar from 'chokidar';
 
-// List of registered component directories (add more as needed)
-const registeredComponentsDirs = [
-  path.join(__dirname, '..', 'components', 'authorable'),
-  ...fs
-    .readdirSync(path.join(__dirname, '..', 'components', 'authorable'), { withFileTypes: true })
-    .filter((dirent) => dirent.isDirectory())
-    .map((dirent) => path.join(__dirname, '..', 'components', 'authorable', dirent.name)),
-  path.join(__dirname, '..', 'components', 'ui'),
-  ...fs
-    .readdirSync(path.join(__dirname, '..', 'components', 'ui'), { withFileTypes: true })
-    .filter((dirent) => dirent.isDirectory())
-    .map((dirent) => path.join(__dirname, '..', 'components', 'ui', dirent.name)),
-  // Add more directories here if needed
+// ============================================================================
+// CONFIGURATION: Add your component directories here (scans recursively)
+// ============================================================================
+const ALLOWED_COMPONENT_PATHS = [
+  'components/authorable/shared',
+  'components/ui',
+  // Add more paths here as needed
+  // Example: 'components/shared',
+  // Example: 'components/features',
 ];
+
+// Convert relative paths to absolute paths
+const registeredComponentsDirs = ALLOWED_COMPONENT_PATHS.map((dir) =>
+  path.join(__dirname, '..', dir)
+);
+
+
 // Path to the config directory where we'll create the barrel file
 const configDir = path.join(__dirname, '..', 'temp');
 
 // Helper to get relative import path from configDir to component file
 const getRelativeImportPath = (componentFilePath: string) => {
   return path.relative(configDir, componentFilePath).replace(/\\/g, '/');
+};
+
+/**
+ * Recursively find all component files in a directory
+ * @param dirPath - Directory path to scan
+ * @param componentFiles - Array to collect found files
+ */
+const findComponentFiles = (dirPath: string, componentFiles: Array<{ file: string; dir: string }> = []): Array<{ file: string; dir: string }> => {
+  if (!fs.existsSync(dirPath)) {
+    return componentFiles;
+  }
+
+  const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const fullPath = path.join(dirPath, entry.name);
+    // Using statSync for more reliable file type detection
+    const stats = fs.statSync(fullPath);
+
+    // Skip node_modules, .git, and other hidden directories
+    if (stats.isDirectory() && !entry.name.startsWith('.') && entry.name !== 'node_modules') {
+      // Recursively scan subdirectories
+      findComponentFiles(fullPath, componentFiles);
+    } else if (entry.isFile()) {
+      // Check if it's a component file
+      if (
+        entry.name.endsWith('.tsx') ||
+        entry.name.endsWith('.jsx') ||
+        entry.name.endsWith('.ts') ||
+        entry.name.endsWith('.js')
+      ) {
+        componentFiles.push({
+          file: entry.name,
+          dir: dirPath,
+        });
+      }
+    }
+  }
+
+  return componentFiles;
 };
 
 // Function to get all component files from the directories
@@ -32,26 +75,20 @@ export const generateRegisteredComponents = () => {
       fs.mkdirSync(configDir, { recursive: true });
     }
 
-    // Collect all component files from all directories
-    const componentMap = new Map(); // Map<componentName, { file, dir }>
+    // Collect all component files from all directories (recursively)
+    const componentMap = new Map<string, { file: string; dir: string }>();
+
     for (const dir of registeredComponentsDirs) {
-      if (!fs.existsSync(dir)) continue;
-      const files = fs.readdirSync(dir);
-      files.forEach((file) => {
-        if (
-          file.endsWith('.tsx') ||
-          file.endsWith('.jsx') ||
-          file.endsWith('.js') ||
-          file.endsWith('.ts')
-        ) {
-          const componentName = path.basename(file, path.extname(file));
-          // Only add if not already present (first occurrence wins)
-          if (!componentMap.has(componentName)) {
-            componentMap.set(componentName, {
-              file,
-              dir,
-            });
-          }
+      const files = findComponentFiles(dir);
+
+      files.forEach(({ file, dir: fileDir }) => {
+        const componentName = path.basename(file, path.extname(file));
+        // Only add if not already present (first occurrence wins)
+        if (!componentMap.has(componentName)) {
+          componentMap.set(componentName, {
+            file,
+            dir: fileDir,
+          });
         }
       });
     }
@@ -120,11 +157,12 @@ ${exports}
 
 // Watch mode functionality
 const startWatchMode = () => {
-  // Initialize watcher for all directories
+  // Initialize watcher for all directories (recursive watching)
   const watcher = chokidar.watch(registeredComponentsDirs, {
-    ignored: /(^|[/\\])\../, // ignore dotfiles
+    ignored: /(^|[/\\])(\.|node_modules)/, // ignore dotfiles and node_modules
     persistent: true,
     ignoreInitial: false, // Run immediately on startup
+    depth: 99, // Watch recursively to any depth
   });
 
   let isGenerating = false;
@@ -171,7 +209,7 @@ const startWatchMode = () => {
         debouncedGenerate();
       }
     })
-    .on('ready', () => {})
+    .on('ready', () => { })
     .on('error', (error) => {
       console.error('❌ Watcher error:', error);
     });

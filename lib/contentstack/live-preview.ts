@@ -27,5 +27,6 @@ export function initLivePreview() {
     editButton: {
       enable: true, // Enabling the edit button for live preview
     },
+    cleanCslpOnProduction: true
   });
 }
