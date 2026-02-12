@@ -81,7 +81,7 @@ export async function createManagementClient() {
     validateEnvironment();
 
     const config: ManagementClientConfig = {
-        authtoken: "cs515a1571870fe46038dff9d0",
+        authtoken: process.env.CONTENTSTACK_MANAGEMENT_TOKEN!,
         apiKey: process.env.CONTENTSTACK_API_KEY!,
     };
 

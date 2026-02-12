@@ -66,7 +66,7 @@ export async function SharedPageLayout({
             </div>
           </main>
           <footer>
-            <div>{footer && <Footer />}</div>
+            <div>{footer && <Footer {...footer} />}</div>
           </footer>
           <BackToTop />
         </div>

@@ -17,10 +17,6 @@ export interface LanguageDetail {
 
 // Available locales in the Contentstack stack
 export const SUPPORTED_LOCALES = [
-  "en-in",
-  "pt",
-  "fr",
-  "tr-tr",
   "es",
   "en-us"
 ] as const;
@@ -38,12 +34,6 @@ export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
 export const LANGUAGE_DETAILS: LanguageDetail[] = [
   {
-    "countryName": "India",
-    "nativeName": "English",
-    "isoCode": "en",
-    "langCode": "en-in"
-  },
-  {
     "countryName": "United States",
     "nativeName": "English",
     "isoCode": "en",
@@ -51,27 +41,9 @@ export const LANGUAGE_DETAILS: LanguageDetail[] = [
   },
   {
     "countryName": null,
-    "nativeName": "French",
-    "isoCode": "fr",
-    "langCode": "fr"
-  },
-  {
-    "countryName": null,
-    "nativeName": "Portuguese",
-    "isoCode": "pt",
-    "langCode": "pt"
-  },
-  {
-    "countryName": null,
     "nativeName": "Spanish",
     "isoCode": "es",
     "langCode": "es"
-  },
-  {
-    "countryName": "Turkey",
-    "nativeName": "Turkish",
-    "isoCode": "tr",
-    "langCode": "tr-tr"
   }
 ];
 

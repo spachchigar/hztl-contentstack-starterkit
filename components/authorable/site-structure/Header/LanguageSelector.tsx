@@ -52,7 +52,7 @@ export const LanguageSelector = () => {
   const currentLanguage = availableLanguages.find((lang) => lang.langCode === currentLocale);
 
   // Labels with fallbacks
-  const ariaLabel = globalLabels.country_selector_aria_label || 'Select a language';
+  const ariaLabel = globalLabels.country_selector_label || 'Select a language';
   const selectedLabel = globalLabels.is_selected_label || 'is selected';
 
   // ============================================================================
