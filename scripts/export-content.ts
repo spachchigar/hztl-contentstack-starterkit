@@ -1,12 +1,11 @@
 import dotenv from 'dotenv';
 import { execSync } from 'child_process';
 import fs from 'fs';
-import path from 'path';
 
 dotenv.config({ path: '.env' });
 
 const apiKey = process.env.CONTENTSTACK_API_KEY;
-const outputDir = './cs-starterkit-schema';
+const outputDir = './contentstack-schema';
 
 if (!apiKey) {
   console.error('❌ Error: CONTENTSTACK_API_KEY not found in .env');

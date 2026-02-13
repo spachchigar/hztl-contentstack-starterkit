@@ -5,7 +5,7 @@ dotenv.config({ path: '.env' });
 
 const args = process.argv.slice(2);
 const apiKey = args[0] || process.env.CONTENTSTACK_API_KEY;
-const inputDir = './cs-starterkit-schema';
+const inputDir = './contentstack-schema';
 
 if (!apiKey) {
     console.error('❌ Error: Stack API key is required');

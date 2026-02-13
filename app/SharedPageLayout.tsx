@@ -78,7 +78,10 @@ export async function SharedPageLayout({
 const TAILWIND_VARIANTS = tv({
   slots: {
     base: [
-      'overflow-x-clip'
+      'overflow-x-clip',
+      'flex',
+      'flex-col',
+      'h-full'
     ]
   }
 })

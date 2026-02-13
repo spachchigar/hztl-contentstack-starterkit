@@ -23,8 +23,8 @@
     "build": "cross-env NODE_ENV=production npm-run-all --serial fetch-languages tsgen gen-config next:build",
     "start": "cross-env-shell NODE_ENV=production npm-run-all --serial fetch-languages tsgen gen-config next:build next:start",
     "lint": "next lint",
-    "export-content": "tsx scripts/export-stack.js",
-    "import-content": "tsx scripts/import-stack.ts"
+    "export-content": "tsx scripts/export-content.ts",
+    "import-content": "tsx scripts/import-content.ts"
   },
   "dependencies": {
     "@contentstack/delivery-sdk": "^4.10.3",

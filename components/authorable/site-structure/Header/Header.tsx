@@ -1,25 +1,28 @@
 'use client';
 
-import { IEnhancedImage, IHeader, ILink } from "@/.generated";
+import { CSLPAttribute, CSLPFieldMapping, IEnhancedImage, IHeader, ILink } from "@/.generated";
 import { useIsScrolled } from "@/lib/hooks/useIsScrolled";
 import { tv } from "tailwind-variants";
 import { LanguageSelector } from './LanguageSelector';
 import Link from "next/link";
 import ImageWrapper from "@/helpers/Wrappers/ImageWrapper/ImageWrapper";
+import { getCSLPAttributes } from "@/utils/type-guards";
 
 export const Logo = ({
   logo,
   logoLink,
+  $
 }: {
   logo?: IEnhancedImage;
   logoLink?: ILink;
+  $?: CSLPFieldMapping
 }) => {
   const { logoContainer } = TAILWIND_VARIANTS();
 
   if (!logo || !logoLink) return null;
 
   return (
-    <div className={logoContainer()}>
+    <div className={logoContainer()} {...getCSLPAttributes($)}>
       <Link
         href={logoLink?.href ?? '/'}
       >
@@ -41,7 +44,7 @@ export const Header = (props: IHeader) => {
       <div className={inner()}>
         <div className={menuWrapper()}>
           <div className={menuContainer()}>
-            <Logo logo={props.logo} logoLink={props.logo_link} />
+            <Logo logo={props.logo} logoLink={props.logo_link} $={props.$?.logo_link} />
           </div>
           <div className={languageWrapper()}>
             <LanguageSelector />
