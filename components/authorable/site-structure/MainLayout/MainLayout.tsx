@@ -1,10 +1,7 @@
-'use client';
-
 import { IPage } from "@/.generated";
 import { ComponentRenderer } from "@/components/primitives/ComponentRenderer";
 import { ContentstackLivePreview } from "@/components/primitives/ContentstackLivePreview";
-import { useScrollElementIntoView } from "@/lib/hooks/useScrollElementIntoView";
-import { JSX, useRef } from "react";
+import { JSX } from "react";
 import { tv } from "tailwind-variants";
 
 interface MainLayoutProps {
@@ -14,12 +11,6 @@ interface MainLayoutProps {
 
 
 export const MainLayout = ({ page, pageContentTypeUID = "page" }: MainLayoutProps): JSX.Element => {
-    const mainLayoutRef = useRef<HTMLDivElement>(null);
-
-    useScrollElementIntoView(mainLayoutRef.current, {
-        stickyHeaderId: 'header',
-        scrollTargetId: 'main-content',
-    });
 
     const pageTypeMapping = {
         page: () => {
@@ -35,7 +26,6 @@ export const MainLayout = ({ page, pageContentTypeUID = "page" }: MainLayoutProp
                 <div id="main-content" className={mainContent()}></div>
             </div>
             <div className={base()}
-                ref={mainLayoutRef}
                 id={page.uid}
                 data-component="authorable/shared/site-structure/main-layout/main-layout"
             >
