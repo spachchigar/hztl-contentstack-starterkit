@@ -1,0 +1,39 @@
+{
+    "tailwindCSS.experimental.classRegex": [
+        // Match tailwind-variants arrays: ['class1', 'class2']
+        [
+            "(?:slots|base|variants|wrapperBase|wrapper|base|mainContent|mainContentWrapper):\\s*\\[([^\\]]*)\\]",
+            "['\"`]([^'\"`]*)['\"`]"
+        ],
+        // Match any string array with Tailwind classes
+        [
+            "\\[([^\\]]*)\\]",
+            "['\"`]([^'\"`]*)['\"`]"
+        ],
+        // Match template literals
+        [
+            "`([^`]*)`",
+            "([^`]+)"
+        ]
+    ],
+    "tailwindCSS.includeLanguages": {
+        "typescript": "javascript",
+        "typescriptreact": "javascript"
+    },
+    "tailwindCSS.classAttributes": [
+        "class",
+        "className",
+        "classList",
+        "ngClass"
+    ],
+    "editor.quickSuggestions": {
+        "strings": true
+    },
+    "css.validate": true,
+    "tailwindCSS.validate": true,
+    "tailwindCSS.emmetCompletions": true,
+    "files.associations": {
+        "*.css": "tailwindcss"
+    },
+    "search.useIgnoreFiles": true
+}

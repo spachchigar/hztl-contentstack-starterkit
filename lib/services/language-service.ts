@@ -2,11 +2,8 @@ import {
   SUPPORTED_LOCALES,
   DEFAULT_LOCALE,
   SupportedLocale,
-  LANGUAGE_VARIANT_MAP,
-  PREFERRED_LOCALE_BY_LANGUAGE,
   LANGUAGES_WITHOUT_URL_PREFIX,
-  LANGUAGE_NAMES,
-} from '@/constants/locales';
+} from '../../constants/locales';
 
 const LANGUAGE_PREFERENCE_COOKIE = 'language-preference';
 const LANGUAGE_PREFERENCE_STORAGE_KEY = 'language-preference';
@@ -19,7 +16,7 @@ class LanguageService {
   private static instance: LanguageService;
   private currentLanguage: string = DEFAULT_LOCALE;
 
-  private constructor() {}
+  private constructor() { }
 
   public static getInstance(): LanguageService {
     if (!LanguageService.instance) {
@@ -43,11 +40,7 @@ class LanguageService {
     //https://www.contentstack.com/docs/developers/multilingual-content/list-of-supported-languages
     // Check if the language or its base language variant is supported
     return (
-      SUPPORTED_LOCALES.includes(language as any) ||
-      SUPPORTED_LOCALES.some(
-        (locale) =>
-          LanguageService.getBaseLanguage(locale) === LanguageService.getBaseLanguage(language)
-      )
+      SUPPORTED_LOCALES.includes(language as any)
     );
   }
 
@@ -57,23 +50,15 @@ class LanguageService {
    */
   public static saveLanguagePreference(baseLanguage: string): void {
     if (typeof window === 'undefined') return;
-    const preferredLocale = LanguageService.getPreferredLocale(baseLanguage);
 
     // Save to localStorage for client-side access
     try {
-      localStorage.setItem(LANGUAGE_PREFERENCE_STORAGE_KEY, preferredLocale);
+      localStorage.setItem(LANGUAGE_PREFERENCE_STORAGE_KEY, baseLanguage);
     } catch (error) {
       console.warn('Failed to save language preference to localStorage:', error);
     }
 
-    // Save to cookie for server-side access (accessible in middleware)
-    try {
-      document.cookie = `${LANGUAGE_PREFERENCE_COOKIE}=${preferredLocale}; path=/; max-age=${
-        365 * 24 * 60 * 60
-      }; SameSite=Lax`;
-    } catch (error) {
-      console.warn('Failed to save language preference to cookie:', error);
-    }
+    // cookie for server-side is stored in the action for atomicity
   }
 
   /**
@@ -118,23 +103,29 @@ class LanguageService {
   // Static utility methods
 
   /**
+   * ! Function not needed as of now
+   */
+  /**
    * Get base language code from any locale variant
    * @param locale - The locale string (e.g., 'en-us', 'en', 'es')
    * @returns The base language code (e.g., 'en' from 'en-us' or 'en')
    */
-  public static getBaseLanguage(locale: string): string {
-    if (!locale) return '';
-    return LANGUAGE_VARIANT_MAP[locale as SupportedLocale] || locale.split('-')[0];
-  }
+  // public static getBaseLanguage(locale: string): string {
+  //   if (!locale) return '';
+  //   return LANGUAGE_VARIANT_MAP[locale as SupportedLocale] || locale.split('-')[0];
+  // }
 
+  /**
+   * ! Function not needed as of now
+   */
   /**
    * Get preferred locale for a base language
    * @param baseLanguage - The base language code (e.g., 'en', 'es')
    * @returns The preferred locale variant (e.g., 'en-us' for 'en')
    */
-  public static getPreferredLocale(baseLanguage: string): SupportedLocale {
-    return PREFERRED_LOCALE_BY_LANGUAGE[baseLanguage] || (baseLanguage as SupportedLocale);
-  }
+  // public static getPreferredLocale(baseLanguage: string): SupportedLocale {
+  //   return PREFERRED_LOCALE_BY_LANGUAGE[baseLanguage] || (baseLanguage as SupportedLocale);
+  // }
 
   /**
    * Check if a language should appear in the URL
@@ -152,11 +143,10 @@ class LanguageService {
    * @returns The complete URL path with or without language prefix
    */
   public static getLanguageUrlPath(baseLanguage: string, pathWithoutLocale: string): string {
-    const preferredLocale = LanguageService.getPreferredLocale(baseLanguage);
     const basePath = pathWithoutLocale ? `/${pathWithoutLocale}` : '/';
 
     if (LanguageService.shouldShowLanguageInUrl(baseLanguage)) {
-      return `/${preferredLocale}${basePath}`;
+      return `/${baseLanguage}${basePath}`;
     }
 
     // English (default) - no language prefix
@@ -164,32 +154,36 @@ class LanguageService {
   }
 
   /**
+   * ! Function not needed as of now
+   */
+
+  /**
    * Get unique languages (one per language, not per variant)
    * @returns Array of unique languages with their preferred locale and label
    */
-  public static getUniqueLanguages(): Array<{
-    baseLanguage: string;
-    preferredLocale: SupportedLocale;
-    label: string;
-  }> {
-    const languageMap = new Map<string, { preferredLocale: SupportedLocale; label: string }>();
+  // public static getUniqueLanguages(): Array<{
+  //   baseLanguage: string;
+  //   preferredLocale: SupportedLocale;
+  //   label: string;
+  // }> {
+  //   const languageMap = new Map<string, { preferredLocale: SupportedLocale; label: string }>();
 
-    SUPPORTED_LOCALES.forEach((locale) => {
-      const baseLanguage = LanguageService.getBaseLanguage(locale);
-      if (!languageMap.has(baseLanguage)) {
-        languageMap.set(baseLanguage, {
-          preferredLocale: LanguageService.getPreferredLocale(baseLanguage),
-          label: LANGUAGE_NAMES[locale],
-        });
-      }
-    });
+  //   SUPPORTED_LOCALES.forEach((locale) => {
+  //     const baseLanguage = LanguageService.getBaseLanguage(locale);
+  //     if (!languageMap.has(baseLanguage)) {
+  //       languageMap.set(baseLanguage, {
+  //         preferredLocale: LanguageService.getPreferredLocale(baseLanguage),
+  //         label: LANGUAGE_NAMES[locale],
+  //       });
+  //     }
+  //   });
 
-    return Array.from(languageMap.entries()).map(([baseLanguage, { preferredLocale, label }]) => ({
-      baseLanguage,
-      preferredLocale,
-      label,
-    }));
-  }
+  //   return Array.from(languageMap.entries()).map(([baseLanguage, { preferredLocale, label }]) => ({
+  //     baseLanguage,
+  //     preferredLocale,
+  //     label,
+  //   }));
+  // }
 }
 
 // Export class for singleton access via getInstance() and static method access

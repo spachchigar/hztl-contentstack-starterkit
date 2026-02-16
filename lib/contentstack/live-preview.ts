@@ -2,7 +2,7 @@
 import ContentstackLivePreview, { IStackSdk } from '@contentstack/live-preview-utils';
 
 // Importing stack instance, endpoints, and preview mode check
-import { stack, getEndpoints, isPreviewModeEnabled } from './stack';
+import { stack, getEndpoints, isPreviewModeEnabled } from './delivery-stack';
 
 /**
  * Initialize live preview functionality
@@ -27,5 +27,6 @@ export function initLivePreview() {
     editButton: {
       enable: true, // Enabling the edit button for live preview
     },
+    cleanCslpOnProduction: true
   });
 }

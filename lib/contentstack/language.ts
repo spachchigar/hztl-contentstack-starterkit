@@ -1,5 +1,6 @@
 // Importing the language service
-import { LanguageService } from '../services/language-service';
+import { DEFAULT_LOCALE } from '../../constants/locales';
+import { LanguageService } from '../../lib/services/language-service';
 
 /**
  * Helper function to get current language
@@ -25,7 +26,7 @@ export function setCurrentLanguage(language: string): void {
  */
 export function extractAndSetLanguage(locale: string): string {
   const isLanguageParam = isLanguageSupported(locale);
-  const language = isLanguageParam ? locale : 'en-us';
+  const language = isLanguageParam ? locale : DEFAULT_LOCALE;
   setCurrentLanguage(language);
   return language;
 }

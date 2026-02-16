@@ -1,6 +1,6 @@
 // middleware.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from '@/constants/locales';
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type SupportedLocale } from '@/constants/locales';
 import { LanguageService } from '@/lib/services/language-service';
 
 const PUBLIC_FILE = /\.(.*)$/;
@@ -9,11 +9,14 @@ const LANGUAGE_PREFERENCE_COOKIE = 'language-preference';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Ignore public files, API routes, or Next.js internals
+  // List of paths to skip - explicit checks for safety
   if (
     pathname.startsWith('/api') ||
     pathname.startsWith('/_next') ||
+    pathname.startsWith('/.well-known') ||
     pathname.startsWith('/favicon.ico') ||
+    pathname.startsWith('/robots.txt') ||
+    pathname.startsWith('/sitemap') ||
     PUBLIC_FILE.test(pathname)
   ) {
     return NextResponse.next();
@@ -30,18 +33,27 @@ export function middleware(request: NextRequest) {
   let shouldUpdateCookie = false;
   let localeToUse: SupportedLocale = DEFAULT_LOCALE;
 
-  // If first segment is a supported locale, allow it through
+  // If first segment is a supported locale
   if (SUPPORTED_LOCALES.includes(firstSegment as SupportedLocale)) {
     localeToUse = firstSegment as SupportedLocale;
-    // Always update cookie to match URL locale for consistency
-    shouldUpdateCookie = true;
-    response = NextResponse.next();
+
+    // Redirect default locale with prefix to clean URL
+    if (localeToUse === DEFAULT_LOCALE) {
+      // Remove the /en-us/ prefix and redirect to clean URL
+      const pathWithoutLocale = '/' + segments.slice(2).join('/');
+      const url = request.nextUrl.clone();
+      url.pathname = pathWithoutLocale || '/';
+      shouldUpdateCookie = true;
+      response = NextResponse.redirect(url, 301);
+    } else {
+      // Non-default locales: allow through
+      shouldUpdateCookie = true;
+      response = NextResponse.next();
+    }
   } else {
     // For paths without locale prefix, check for stored preference
     if (storedPreference) {
-      // Use stored preference and redirect to include locale in URL (if not English)
-      const baseLanguage = LanguageService.getBaseLanguage(storedPreference);
-      const shouldShowInUrl = LanguageService.shouldShowLanguageInUrl(baseLanguage);
+      const shouldShowInUrl = LanguageService.shouldShowLanguageInUrl(storedPreference);
 
       if (shouldShowInUrl) {
         // Redirect to URL with locale prefix for non-English languages
@@ -55,11 +67,9 @@ export function middleware(request: NextRequest) {
         response = NextResponse.rewrite(url);
       }
       localeToUse = storedPreference;
-      // Update cookie to ensure it's set
       shouldUpdateCookie = true;
     } else {
       // No stored preference, use default (English)
-      // Internally rewrite to default locale but keep URL clean (no prefix for English)
       const url = request.nextUrl.clone();
       url.pathname = `/${DEFAULT_LOCALE}${pathname}`;
       response = NextResponse.rewrite(url);
@@ -69,9 +79,7 @@ export function middleware(request: NextRequest) {
 
   // Update cookie if needed
   if (shouldUpdateCookie) {
-    const baseLanguage = LanguageService.getBaseLanguage(localeToUse);
-    const preferredLocale = LanguageService.getPreferredLocale(baseLanguage);
-    response.cookies.set(LANGUAGE_PREFERENCE_COOKIE, preferredLocale, {
+    response.cookies.set(LANGUAGE_PREFERENCE_COOKIE, localeToUse, {
       path: '/',
       maxAge: 365 * 24 * 60 * 60, // 1 year
       sameSite: 'lax',
@@ -79,14 +87,9 @@ export function middleware(request: NextRequest) {
   }
 
   // Add cache-control headers for SSR pages
-  // public: allows CDNs and proxies to cache the response
-  // max-age: how long the response is considered fresh
-  // stale-while-revalidate: allows serving stale content while revalidating in background
   response.headers.set(
     'Cache-Control',
-    `public, max-age=${process.env.CACHE_MAX_AGE || 3600}, stale-while-revalidate=${
-      process.env.STALE_WHILE_REVALIDATE || 86400
-    }`
+    `public, max-age=${process.env.CACHE_MAX_AGE || 3600}, stale-while-revalidate=${process.env.STALE_WHILE_REVALIDATE || 86400}`
   );
 
   // Set the current locale as a response header for debugging/CDN rules
@@ -98,9 +101,7 @@ export function middleware(request: NextRequest) {
 // Configure which paths the middleware should run on
 export const config = {
   matcher: [
-    // Skip all internal paths (_next)
-    '/((?!_next/static|_next/image|favicon.ico).*)',
-    // Optional: only run on root (/) URL
-    // '/'
+    // Skip all internal paths and special files
+    '/((?!_next/|api/|favicon.ico|.well-known/|robots.txt|sitemap|.*\\..*).*)',
   ],
 };

@@ -1,5 +1,6 @@
 import { getPage, getHeader, getFooter } from '@/lib/contentstack/entries';
 import { IHeader as HeaderProps, IFooter as FooterProps, IPage } from '@/.generated';
+import { getCurrentLanguage } from './language';
 
 // Type mapping for page content types
 type PageTypeMap = {
@@ -24,12 +25,13 @@ export async function fetchPageData(
 ): Promise<PageData> {
   // Use the type mapping to get the correct type, fallback to IPage for unknown types
   const pageType = pageContentTypeUID as keyof PageTypeMap;
+  const currentLanguage = getCurrentLanguage();
 
   // Fetch all data in parallel for maximum performance
   const [page, header, footer] = await Promise.all([
-    getPage<PageTypeMap[typeof pageType]>(urlPath, pageContentTypeUID),
-    getHeader(),
-    getFooter(),
+    getPage<PageTypeMap[typeof pageType]>(urlPath, pageContentTypeUID, currentLanguage),
+    getHeader(currentLanguage),
+    getFooter(currentLanguage),
   ]);
 
   return {

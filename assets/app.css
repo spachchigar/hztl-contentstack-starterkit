@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.prod-mode {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+}
+
+
+html {
+    @apply h-full;
+    scroll-behavior: smooth;
+}
+body {
+    @apply h-full;
+}
+main {
+    @apply w-full grow shrink-0;
+}

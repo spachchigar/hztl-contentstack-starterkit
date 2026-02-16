@@ -2,8 +2,6 @@
 import { fetchGlobalLabels } from '@/utils/fetch-global-labels';
 import { Providers } from '@/providers';
 import { isLanguageSupported } from '@/lib/contentstack/language';
-// Initialize component registry early to avoid circular dependencies
-import '@/utils/init-component-registry';
 
 type Props = {
   children: React.ReactNode;

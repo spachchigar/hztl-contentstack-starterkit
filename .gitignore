@@ -5,3 +5,5 @@ node_modules
 .generated
 temp
 package-lock.json
+logs
+_backup_*

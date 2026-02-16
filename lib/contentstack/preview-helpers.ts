@@ -2,16 +2,16 @@
 import contentstack from '@contentstack/delivery-sdk';
 
 // Import preview mode check from stack module
-import { isPreviewModeEnabled } from './stack';
+import { isPreviewModeEnabled } from './delivery-stack';
 
 /**
  * Helper function to add editable tags for live preview (reduces code duplication)
  * @param entry - The entry to add editable tags to
  * @param contentTypeUid - The content type UID
  */
-export function addEditableTagsIfPreview(entry: any, contentTypeUid: string): void {
+export function addEditableTagsIfPreview(entry: any, contentTypeUid: string, locale: string): void {
   if (isPreviewModeEnabled()) {
-    contentstack.Utils.addEditableTags(entry, contentTypeUid, true);
+    contentstack.Utils.addEditableTags(entry, contentTypeUid, true, locale);
   }
 }
 

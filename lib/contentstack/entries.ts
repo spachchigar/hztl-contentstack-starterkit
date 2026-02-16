@@ -1,14 +1,14 @@
-// Importing Contentstack SDK and specific types for query operations
+// Global
 import contentstack, { QueryOperation } from '@contentstack/delivery-sdk';
+import { cache } from 'react';
 
-// Importing type definitions
+// Local
 import { GetEntries, GetEntryByUid } from '../types';
-import { IFooter, IHeader } from '@/.generated';
-
-// Importing stack instance and language helpers
-import { stack } from './stack';
+import { IFooter, IHeader, ISiteSettings } from '@/.generated';
+import { stack } from './delivery-stack';
 import { getCurrentLanguage } from './language';
 import { addEditableTagsIfPreview, addEditableTagsToEntries } from './preview-helpers';
+import { DEFAULT_LOCALE } from '../../constants/locales';
 
 /**
  * Function to fetch page data based on the URL with multisite support
@@ -16,84 +16,110 @@ import { addEditableTagsIfPreview, addEditableTagsToEntries } from './preview-he
  * @param pageType - The content type UID (default: 'page')
  * @returns The fetched page entry or undefined
  */
-export async function getPage<T>(url: string, pageType: string) {
-  const query = stack
-    .contentType(pageType) // Specifying the content type as "page"
-    .entry() // Accessing the entry
-    .locale(getCurrentLanguage()) // Add locale specification
-    .query() // Creating a query
-    .addParams({ include_all: true, include_all_depth: 5 }) // Using a safe limit of 5 depth for include_all. Max is 100
-    .where('url', QueryOperation.EQUALS, url.toLowerCase()); // Filtering entries by URL
+export const getPage = cache(async <T>(url: string, pageType: string, locale: string) => {
+  if (!url || !pageType || !locale) return undefined;
 
-  const result = await query.find<T & contentstack.Utils.EntryModel>(); // Executing the query and expecting a result of type Page
-  if (result.entries) {
-    const entry = result.entries[0]; // Getting the first entry from the result
-    addEditableTagsIfPreview(entry, pageType); // Adding editable tags for live preview if enabled
-    return entry; // Returning the fetched entry
+  try {
+    const query = stack
+      .contentType(pageType)
+      .entry()
+      .locale(locale)
+      .query()
+      .addParams({ include_all: true, include_all_depth: 2, include_dimension: true })
+      .where('url', QueryOperation.EQUALS, url.toLowerCase());
+
+    const result = await query.find<T & contentstack.Utils.EntryModel>();
+
+    if (result.entries && result.entries.length > 0) {
+      const entry = result.entries[0];
+      addEditableTagsIfPreview(entry, pageType, locale);
+      return entry;
+    }
+
+    return undefined;
+  } catch (err) {
+    console.error(`Error while fetching page for URL "${url}" (${pageType}, ${locale}):`, err);
+    return undefined;
   }
-  return undefined;
-}
+});
 
 /**
  * Function to fetch header entry
  * @returns The fetched header entry or undefined
  */
-export async function getHeader() {
-  const result = await stack
-    .contentType('header') // Specifying the content type as "header"
-    .entry() // Accessing the entry
-    .locale(getCurrentLanguage())
-    .query() // Creating a query
-    .find<IHeader>(); // Executing the query and expecting a result of type Header
+export const getHeader = cache(async (locale: string) => {
+  if (!locale) return undefined;
 
-  if (result.entries) {
-    const entry = result.entries[0]; // Getting the first entry from the result
-    addEditableTagsIfPreview(entry, 'header'); // Adding editable tags for live preview if enabled
-    return entry; // Returning the fetched entry
+  try {
+    const result = await stack
+      .contentType('header')
+      .entry()
+      .locale(locale)
+      .query()
+      .addParams({ include_dimension: true })
+      .find<IHeader>();
+
+    if (result.entries && result.entries.length > 0) {
+      const entry = result.entries[0];
+      addEditableTagsIfPreview(entry, 'header', locale);
+      return entry;
+    }
+
+    return undefined;
+  } catch (err) {
+    console.error(`Error while fetching header for locale "${locale}":`, err);
+    return undefined;
   }
-  return undefined;
-}
+});
 
 /**
  * Function to fetch footer entry
  * @returns The fetched footer entry or undefined
  */
-export async function getFooter() {
-  const result = await stack
-    .contentType('footer') // Specifying the content type as "footer"
-    .entry() // Accessing the entry
-    .locale(getCurrentLanguage())
-    .query() // Creating a query
-    .find<IFooter>(); // Executing the query and expecting a result of type Footer
+export const getFooter = cache(async (locale: string) => {
+  if (!locale) return undefined;
 
-  if (result.entries) {
-    const entry = result.entries[0]; // Getting the first entry from the result
-    addEditableTagsIfPreview(entry, 'footer'); // Adding editable tags for live preview if enabled
-    return entry; // Returning the fetched entry
+  try {
+    const result = await stack
+      .contentType('footer')
+      .entry()
+      .locale(locale)
+      .query()
+      .addParams({ include_dimension: true })
+      .find<IFooter>();
+
+    if (result.entries && result.entries.length > 0) {
+      const entry = result.entries[0];
+      addEditableTagsIfPreview(entry, 'footer', locale);
+      return entry;
+    }
+
+    return undefined;
+  } catch (err) {
+    console.error(`Error while fetching footer for locale "${locale}":`, err);
+    return undefined;
   }
-  return undefined;
-}
+});
 
 /**
  * Function to fetch multiple entries of a content type
  * @param params - Object containing contentTypeUid, referencesToInclude, and locale
  * @returns The fetched entries or undefined
  */
-export const getEntries = async <T>({
+export const getEntries = cache(async <T>({
   contentTypeUid,
   referencesToInclude = '',
   locale,
 }: Pick<GetEntries, 'contentTypeUid' | 'referencesToInclude' | 'locale'>) => {
-  if (!contentTypeUid) return;
+  if (!contentTypeUid) return undefined;
+
   try {
     const entryQuery = stack.contentType(contentTypeUid).entry();
 
-    // Include references if specified
     if (referencesToInclude) {
       entryQuery.includeReference(referencesToInclude);
     }
 
-    // Use provided locale or fall back to singleton instance
     const localeToUse = locale || getCurrentLanguage();
 
     const entries = await entryQuery
@@ -102,27 +128,28 @@ export const getEntries = async <T>({
       .query()
       .find<T & contentstack.Utils.EntryModel>();
 
-    // Add editable tags for live preview if enabled
     if (entries.entries) {
       addEditableTagsToEntries(entries.entries, contentTypeUid);
     }
 
     return entries;
   } catch (err) {
-    throw err;
+    console.error(`Error while fetching entries for content type "${contentTypeUid}" (locale: ${locale || getCurrentLanguage()}):`, err);
+    return undefined;
   }
-};
+});
 
 /**
  * Function to fetch all slugs for a content type
  * @param params - Object containing contentTypeUid and locale
  * @returns The fetched slugs or undefined
  */
-export const getAllSlugs = async <T>({
+export const getAllSlugs = cache(async <T>({
   contentTypeUid = 'page',
   locale,
 }: Pick<GetEntries, 'contentTypeUid'> & { locale?: string }) => {
-  if (!contentTypeUid) return;
+  if (!contentTypeUid) return undefined;
+
   try {
     const localeToUse = locale || getCurrentLanguage();
     const slugs = await stack
@@ -135,44 +162,75 @@ export const getAllSlugs = async <T>({
 
     return slugs;
   } catch (err) {
-    throw err;
+    console.error(`Error while fetching slugs for content type "${contentTypeUid}" (locale: ${locale || getCurrentLanguage()}):`, err);
+    return undefined;
   }
-};
+});
+
+/**
+ * Fetches site settings entry from Contentstack
+ * @param contentTypeUid - The content type UID for site settings (default: 'site_settings')
+ * @returns The site settings entry if found, or undefined if no entry exists or an error occurs
+ */
+export const getSiteSettings = cache(async (contentTypeUid: string = 'site_settings'): Promise<(ISiteSettings & contentstack.Utils.EntryModel) | undefined> => {
+  if (!contentTypeUid) return undefined;
+
+
+  try {
+    const siteSettings = await stack
+      .contentType(contentTypeUid)
+      .entry()
+      .locale(DEFAULT_LOCALE)
+      .query()
+      .find<ISiteSettings & contentstack.Utils.EntryModel>();
+
+    if (siteSettings.entries && siteSettings.entries.length > 0) {
+      return siteSettings.entries[0];
+    }
+
+    return undefined;
+  } catch (err) {
+    console.error(`Error while fetching site settings for content type "${contentTypeUid}":`, err);
+    return undefined;
+  }
+});
 
 /**
  * Function to fetch a single entry by UID
  * @param params - Object containing contentTypeUid, entryUid, and referencesToInclude
  * @returns The fetched entry or undefined
  */
-export const getEntryByUid = async ({
+export const getEntryByUid = cache(async ({
   contentTypeUid,
   entryUid,
   referencesToInclude = '',
-}: Pick<GetEntryByUid, 'contentTypeUid' | 'entryUid' | 'referencesToInclude'>) => {
-  if (!entryUid || !contentTypeUid) return;
+  locale,
+}: Pick<GetEntryByUid, 'contentTypeUid' | 'entryUid' | 'referencesToInclude' | 'locale'>) => {
+  if (!entryUid || !contentTypeUid) return undefined;
+
   try {
     const entryQuery = stack.contentType(contentTypeUid).entry(entryUid);
 
-    // Include references if specified
     if (referencesToInclude) {
       entryQuery.includeReference(referencesToInclude);
     }
 
-    const entry = await entryQuery.locale(getCurrentLanguage()).fetch();
-    addEditableTagsIfPreview(entry, contentTypeUid); // Adding editable tags for live preview if enabled
+    const localeToUse = locale || getCurrentLanguage();
+    const entry = await entryQuery.locale(localeToUse).fetch();
+    addEditableTagsIfPreview(entry, contentTypeUid, localeToUse);
     return entry;
   } catch (err) {
-    console.error(`Error while fetching entry for ${entryUid} in ${contentTypeUid}`);
-    throw err;
+    console.error(`Error while fetching entry "${entryUid}" for content type "${contentTypeUid}" (locale: ${locale || getCurrentLanguage()}):`, err);
+    return undefined;
   }
-};
+});
 
 /**
  * Function to fetch multiple entries by their UIDs
  * @param params - Object containing contentTypeUid, entryUids, referencesToInclude, and locale
  * @returns The fetched entries sorted by the order of entryUids or undefined
  */
-export const getEntriesByUids = async <T>({
+export const getEntriesByUids = cache(async <T>({
   contentTypeUid,
   entryUids,
   referencesToInclude,
@@ -181,41 +239,33 @@ export const getEntriesByUids = async <T>({
   entryUids?: string | Array<string>;
   locale?: string;
 } & Pick<GetEntryByUid, 'contentTypeUid' | 'referencesToInclude'>) => {
-  if (!entryUids || !contentTypeUid) return;
+  if (!entryUids || !contentTypeUid) return undefined;
 
   try {
     const entry = stack.contentType(contentTypeUid).entry();
 
-    // Include references if specified
     if (referencesToInclude) {
       entry.includeReference(referencesToInclude);
     }
 
-    // Use provided locale or fall back to singleton instance
     const localeToUse = locale || getCurrentLanguage();
     let entryQuery = entry.locale(localeToUse).query();
 
-    // Filter entries by the provided UIDs using whereIn operator
     entryQuery = entryQuery.where('uid', QueryOperation.INCLUDES, entryUids);
 
     const response = await entryQuery.find<T & contentstack.Utils.EntryModel>();
 
-    // Sort the entries based on the original order of entryUids
     if (response.entries && Array.isArray(response.entries) && Array.isArray(entryUids)) {
-      // Early return if no reordering is needed
       if (entryUids.length <= 1 || response.entries.length <= 1) {
-        // Add editable tags for live preview if enabled
         addEditableTagsToEntries(response.entries, contentTypeUid);
         return response;
       }
 
-      // Create a Map for O(1) lookup instead of O(n) find operations
       const entryMap = new Map<string, (typeof response.entries)[number]>();
       for (const entry of response.entries) {
         entryMap.set((entry as any).uid, entry);
       }
 
-      // Build sorted array using Map lookup - O(n) instead of O(n²)
       const sortedEntries: typeof response.entries = [];
       for (const uid of entryUids) {
         const entry = entryMap.get(uid);
@@ -225,14 +275,12 @@ export const getEntriesByUids = async <T>({
       }
 
       response.entries = sortedEntries;
-
-      // Add editable tags after sorting (single pass, more efficient)
       addEditableTagsToEntries(response.entries, contentTypeUid);
     }
 
     return response;
   } catch (err) {
-    console.error(`Error while fetching entries for UIDs ${entryUids} in ${contentTypeUid}`);
-    throw err;
+    console.error(`Error while fetching entries for UIDs ${Array.isArray(entryUids) ? entryUids.join(', ') : entryUids} in content type "${contentTypeUid}" (locale: ${locale || getCurrentLanguage()}):`, err);
+    return undefined;
   }
-};
+});

@@ -1,11 +1,13 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { IPage } from '@/.generated';
-import { Header } from '@/components/authorable/Header';
-import { Footer } from '@/components/authorable/Footer';
-import BackToTop from '@/components/authorable/site-structure/BackToTop/BackToTop';
+import { Header } from '@/components/authorable/site-structure/Header/Header';
+import { Footer } from '@/components/authorable/site-structure/Footer/Footer';
+import { BackToTop } from '@/components/authorable/site-structure/BackToTop/BackToTop';
 import { fetchPageData } from '@/lib/contentstack/page-data';
 import { MainLayout } from '@/components/authorable/site-structure/MainLayout/MainLayout';
+import { tv } from 'tailwind-variants';
+import { cn } from '@/utils/cn';
 
 interface SharedPageLayoutProps {
   urlPath: string;
@@ -47,26 +49,37 @@ export async function SharedPageLayout({
   }
 
   // If no 404 page found from CMS, show default 404 page
-  if (!page || page === undefined) {
+  if (!page) {
     notFound();
   }
 
+  const { base } = TAILWIND_VARIANTS();
+
   return (
     <>
-      <div className="prod-mode">
-        <div tabIndex={-1}>
-          {header && <Header />}
-          <main>
-            <div id="content">
-              <MainLayout page={page} pageContentTypeUID={pageContentTypeUID} />
-            </div>
-          </main>
-          <footer>
-            <div>{footer && <Footer />}</div>
-          </footer>
-          <BackToTop />
-        </div>
+      <div tabIndex={-1} className={cn(base())}>
+        {header && <Header {...header} />}
+        <main>
+          <div id="content">
+            <MainLayout page={page} pageContentTypeUID={pageContentTypeUID} />
+          </div>
+        </main>
+        <footer>
+          <div>{footer && <Footer {...footer} />}</div>
+        </footer>
+        <BackToTop />
       </div>
     </>
   );
 }
+
+const TAILWIND_VARIANTS = tv({
+  slots: {
+    base: [
+      'overflow-x-clip',
+      'flex',
+      'flex-col',
+      'min-h-screen'
+    ]
+  }
+})

@@ -6,7 +6,7 @@ import { tv } from 'tailwind-variants';
 // Local
 import { SvgIcon } from '@/helpers/SvgIcon';
 import { useIsScrolled } from '@/lib/hooks/useIsScrolled';
-import { useGlobalLabels } from '@/providers/GlobalLabelsProvider';
+import { useGlobalLabels } from '@/context/GlobalLabelContext';
 
 const tailwindVariants = tv({
   slots: {
@@ -86,7 +86,7 @@ const tailwindVariants = tv({
   },
 });
 
-const BackToTop = () => {
+export const BackToTop = () => {
   const isScrolled = useIsScrolled();
 
   const { globalLabels } = useGlobalLabels();
@@ -119,5 +119,3 @@ const BackToTop = () => {
     </div>
   );
 };
-
-export default BackToTop;
