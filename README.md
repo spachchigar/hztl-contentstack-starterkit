@@ -232,6 +232,9 @@ http://localhost:3000
 - Navigation works
 - Language selector works  
 - Live Preview works  
+- Metadata tags generated
+- sitemap.xml generated
+- robots.txt generated
 - No console errors  
 - TypeScript types generated  
 
@@ -251,6 +254,7 @@ http://localhost:3000
 
 Contentstack Docs: https://www.contentstack.com/docs/  
 Next.js Docs: https://nextjs.org/docs  
+Starterkit Confluence: https://horizontal.atlassian.net/wiki/spaces/Contentsta/pages/7276040388709/Overview
 
 ---
 
@@ -271,14 +275,7 @@ npm run tsgen
 Build errors  
 Delete `.next` and rebuild.
 
----
-
-## 💬 Support
-
-- Check documentation  
-- Open a GitHub issue  
-- Contact your team  
+Content not visible  
+Ensure all the entries are published in the stack.  
 
 ---
-
-# 🚀 Happy Building!
