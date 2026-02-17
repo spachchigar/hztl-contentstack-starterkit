@@ -1,5 +1,6 @@
 import React from 'react';
 import '@/assets/app.css';
+import { Scripts } from '@/components/primitives/Scripts';
 // IMPORTANT: Register SERVER components for server-side bundle
 // This ensures ComponentMapper has server components available during SSR
 import '@/temp/registered-server-components';
@@ -12,7 +13,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* Setting the language attribute for the HTML document */}
+      <Scripts />
       <body>{children}</body>
     </html>
   );
