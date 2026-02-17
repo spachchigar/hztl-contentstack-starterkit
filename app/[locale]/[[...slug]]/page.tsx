@@ -79,7 +79,6 @@ export async function generateMetadata(props: SlugPageProps): Promise<Metadata> 
   const urlPath = `/${pathSegments?.join('/')}`;
 
   if (!isLanguageSupported(resolvedParams?.locale)) {
-    console.error('Language not supported:', resolvedParams?.locale);
     return {
       title: 'Page Title',
     }

@@ -11,10 +11,7 @@ export const Scripts = () => {
   // - The setup below will disable the automatic sending of Page Analysis Information (to prevent duplicative sends, as this same information will be included in the jstag.pageView() call below, by default)
   jstag.init({
     src: 'https://c.lytics.io/api/tag/9718d7603eb2bcb04fe6375208ccacf8/latest.min.js'
-  });
-  
-  // You may need to send a page view, depending on your use-case
-  jstag.pageView();`
+  });`
 
     return (
         <>
